@@ -445,24 +445,54 @@
       </Tab>
        <Tab fx:id="requestTab" text="Requests">
            <content>
-            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-               <content>
-                       <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="383.0" prefWidth="2500.0" tabClosingPolicy="UNAVAILABLE">
-                           <tabs>
-                               <Tab text="My requests">
-                                   <content>
-                                       <TableView fx:id="tableView_myRequests" prefHeight="200.0" prefWidth="200.0" />
-                                   </content>
-                        </Tab>
-                               <Tab text="Received requests">
-                                   <content>
-                                       <TableView fx:id="tableView_receivedRequests" prefHeight="200.0" prefWidth="200.0" />
-                                   </content>
-                        </Tab>
-                           </tabs>
-                       </TabPane>
-               </content>
-            </ScrollPane>
+            <TabPane>
+               <tabs>
+                  <Tab text="Purachase Requests">
+                     <content>
+                        <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <content>
+                                   <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="383.0" prefWidth="2500.0" tabClosingPolicy="UNAVAILABLE">
+                                       <tabs>
+                                           <Tab text="My requests">
+                                               <content>
+                                                   <TableView fx:id="tableView_myRequests" prefHeight="200.0" prefWidth="200.0" />
+                                               </content>
+                                    </Tab>
+                                           <Tab text="Received requests">
+                                               <content>
+                                                   <TableView fx:id="tableView_receivedRequests" prefHeight="200.0" prefWidth="200.0" />
+                                               </content>
+                                    </Tab>
+                                       </tabs>
+                                   </TabPane>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Switch Requests">
+                     <content>
+                        <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <content>
+                              <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="383.0" prefWidth="2500.0" tabClosingPolicy="UNAVAILABLE">
+                                 <tabs>
+                                    <Tab text="My requests">
+                                       <content>
+                                          <TableView fx:id="tableView_mySwitchRequests" prefHeight="200.0" prefWidth="200.0" />
+                                       </content>
+                                    </Tab>
+                                    <Tab text="Received requests">
+                                       <content>
+                                          <TableView fx:id="tableView_receivedSwitchRequests" prefHeight="200.0" prefWidth="200.0" />
+                                       </content>
+                                    </Tab>
+                                 </tabs>
+                              </TabPane>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
            </content>
        </Tab>
    </tabs>

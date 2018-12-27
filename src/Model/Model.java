@@ -298,19 +298,9 @@ public class Model implements IModel {
 
 
     //
-    //
-    //
-    //
-    //
-    //
-    //
     //functional functions:
     //
-    //
-    //
-    //
-    //
-    //
+
 
 //    private void insertQuery(String table_name, Class<? extends Enum<?>> tableEnum, String[] insert_values) throws SQLException {
 //        String[] field_array = getNames(tableEnum);
