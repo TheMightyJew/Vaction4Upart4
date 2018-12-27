@@ -82,6 +82,7 @@ public class VacationsTable extends AVacationdatabaseTable {
         List<VacationSell> optinalVacation = new ArrayList<>();
         List<VacationSell> ans = new ArrayList<>();
         List<String[]> table = new ArrayList<>();
+
         table = specificSelectQuery(sql);
         if (table == null)
             return null;
