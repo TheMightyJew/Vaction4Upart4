@@ -664,6 +664,10 @@ public class ViewController implements Initializable, Observer {
             Massage.errorMassage("From time must be before To time");
             return true;
         }
+        if(fromDatePublish.getValue().isBefore(LocalDate.now())){
+            Massage.errorMassage("From time must be in the future");
+            return true;
+        }
         if (isNumber(pricePublish.getText()) == false) {
             Massage.errorMassage("Price must be a positive integer");
             return true;

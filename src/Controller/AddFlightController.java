@@ -53,6 +53,10 @@ public class AddFlightController extends Observable implements Initializable {
             Massage.errorMassage("Depart time must be before landing time");
             return true;
         }
+        else if(departDate.getValue().isBefore(LocalDate.now())){
+            Massage.errorMassage("Depart time must be in the future");
+            return true;
+        }
         return false;
     }
 
