@@ -53,14 +53,14 @@ public class PaymentWindowController extends Observable {
 
 
         else {
-            if (model.payForVacation(requestID, new VisaPayment((int) (Integer.parseInt(cardNumberPayment.getText())), (int) (Integer.parseInt(cvvPayment.getText())), datePayment.getValue(), idPayment.getText(), firstNamePayment.getText(), lastNamePayment.getText()))) {
-                closeStage(event);
-                setChanged();
-                notifyObservers();
-                Massage.infoMassage("Payment was made successfully");
-            } else {
-                Massage.errorMassage("Payment failed");
-            }
+//            if (model.payForVacation(requestID, new VisaPayment((int) (Integer.parseInt(cardNumberPayment.getText())), (int) (Integer.parseInt(cvvPayment.getText())), datePayment.getValue(), idPayment.getText(), firstNamePayment.getText(), lastNamePayment.getText()))) {
+//                closeStage(event);
+//                setChanged();
+//                notifyObservers();
+//                Massage.infoMassage("Payment was made successfully");
+//            } else {
+//                Massage.errorMassage("Payment failed");
+//            }
         }
     }
 
@@ -81,14 +81,14 @@ public class PaymentWindowController extends Observable {
         if (emailPayment.getText().isEmpty() || passwordPayment.getText().isEmpty()) {
             Massage.errorMassage("Please fill all the fields");
         }
-        if (model.payForVacation(requestID, new PayaplPayment(emailPayment.getText(), passwordPayment.getText()))) {
-            closeStage(event);
-            setChanged();
-            notifyObservers();
-            Massage.infoMassage("Payment was made successfully");
-        } else {
-            Massage.errorMassage("Payment failed");
-        }
+//        if (model.payForVacation(requestID, new PayaplPayment(emailPayment.getText(), passwordPayment.getText()))) {
+//            closeStage(event);
+//            setChanged();
+//            notifyObservers();
+//            Massage.infoMassage("Payment was made successfully");
+//        } else {
+//            Massage.errorMassage("Payment failed");
+//        }
     }
 
     private void closeStage(ActionEvent event) {

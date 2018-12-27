@@ -18,7 +18,7 @@ public class Main extends Application {
         //primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("vacationPic2.jpg")));
         Parent root = fxmlLoader.load(getClass().getResource("View.fxml").openStream());
         ViewController viewController =fxmlLoader.getController();
-        Model model=new Model("Vaction4U");
+        Model model=new Model();
         viewController.setModel(model);
         primaryStage.setTitle("Vaction4U");
         primaryStage.setScene(new Scene(root));

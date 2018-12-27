@@ -8,18 +8,14 @@ import java.util.List;
 
 public interface IModel {
     //Users Actions
-    void createUser(String Username_val, String Password_val, String Birthday_val, String FirstName_val, String LastName_val, String City_val,String State);
-
     //String[] getUser(String Username_val);
-
-    void updateUserInfo(String Username_key, String Username_val, String Password_val, String Birthday_val, String FirstName_val, String LastName_val, String City_val,String State);
     boolean deleteUser(String username);
 
     boolean userExist(String username);
 
     //update top functions to this functions:
     boolean createUser(User user);
-    User getUser(String Username_val);
+    User getUser(String username_val);
     boolean updateUserInfo(String username, User user);
     //new functions:
 
@@ -93,5 +89,5 @@ public interface IModel {
      * @param payment
      * @return
      */
-    boolean payForVacation(int requestId, Payment payment);
+//    boolean payForVacation(int requestId, Payment payment);
 }
