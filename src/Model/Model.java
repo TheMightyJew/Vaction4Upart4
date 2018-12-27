@@ -62,7 +62,7 @@ public class Model implements IModel {
         createNewFlightsToVacationsTable();
         createNewPaymentsTable();
         createNewVisaPaymentTable();
-        createPaypalPaymentTavle();
+        createPaypalPaymentTable();
     }//creating a new database with the parameter name
 
     public void createNewUsersTable() {
@@ -274,7 +274,7 @@ public class Model implements IModel {
         }
     }
 
-    public void createPaypalPaymentTavle() {
+    public void createPaypalPaymentTable() {
         Connection c = null;
         Statement stmt = null;
         String url = "jdbc:sqlite:" + Configuration.loadProperty("directoryPath") + databaseName;
@@ -297,19 +297,9 @@ public class Model implements IModel {
 
 
     //
-    //
-    //
-    //
-    //
-    //
-    //
     //functional functions:
     //
-    //
-    //
-    //
-    //
-    //
+
 
     private void insertQuery(String table_name, Class<? extends Enum<?>> tableEnum, String[] insert_values) throws SQLException {
         String[] field_array = getNames(tableEnum);
