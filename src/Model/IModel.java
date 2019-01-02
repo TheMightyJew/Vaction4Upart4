@@ -2,6 +2,8 @@ package Model;
 
 
 import Model.Objects.*;
+import Model.Requests.PurchaseARequest;
+import Model.Requests.PurchaseRequestData;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,19 +52,19 @@ public interface IModel {
     List<VacationSell> getVacations(String username,String flightCompany, LocalDate fromDate, LocalDate toDate, boolean baggage, Integer baggageMin, Integer ticketsNum, Vacation.Tickets_Type tickets_type, Integer maxPricePerTicket, String sourceCountry, String destCountry, Vacation.Vacation_Type vacation_type,Vacation.Flight_Type flight_type, boolean hospitalityIncluded, Integer minHospitalityRank);
 
     /**
-     * This functions should put the request in the database with unique id
-     * need to apply: PurchaseRequest.Request_Status=PurchaseRequest.Request_Status.pending
+     * This functions should put the purchaseRequestData in the database with unique id
+     * need to apply: PurchaseARequest.Request_Status=PurchaseARequest.Request_Status.pending
      *
-     * @param request - request from a user that want to buy certain vacation
-     * @return if request application succeeded.
+     * @param purchaseRequestData - purchaseRequestData from a user that want to buy certain vacation
+     * @return if purchaseRequestData application succeeded.
      */
-    boolean sendRequest(Request request);
+    boolean sendRequest(PurchaseRequestData purchaseRequestData);
 
     /**
      * @param username -
      * @return the requests that the given username's user sent to other users
      */
-    List<PurchaseRequest> getMyRequests(String username);
+    List<PurchaseARequest> getMyPurchaseRequests(String username);
 
     /**
      * get the request that username user received from other users.
@@ -70,17 +72,17 @@ public interface IModel {
      * @param username
      * @return
      */
-    List<PurchaseRequest> getReceivedRequests(String username);
+    List<PurchaseARequest> getReceivedPurchaseRequests(String username);
 
     /**
      * @param requestId
      */
-    boolean acceptRequest(int requestId);
+    boolean acceptPurchaseRequest(int requestId);
 
     /**
      * @param requestId
      */
-    boolean rejectRequest(int requestId);
+    boolean rejectPurchaseRequest(int requestId);
 
     /**
      * save payment to database using payment.tostring function.

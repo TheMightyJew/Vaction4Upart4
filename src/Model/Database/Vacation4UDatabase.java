@@ -1,6 +1,9 @@
-package Model;
+package Model.Database;
 
 import Model.Objects.*;
+import Model.Requests.PurchaseARequest;
+import Model.Requests.PurchaseRequestData;
+import Model.Requests.TradeARequest;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +18,7 @@ public class Vacation4UDatabase {
     private PurchaseRequestsTable purchaseRequestsTable;
     private UsersTable usersTable;
     private VacationsTable vacationsTable;
+    private TradeRequestsTable tradeRequestsTable;
 
     String databaseName = "EveryVaction4U.db";
 
@@ -43,7 +47,7 @@ public class Vacation4UDatabase {
     }
 
     public boolean UsersTable_checkPassword(String Username_val, String Password_val) {
-        return usersTable.UsersTable_checkPassword(Username_val, Password_val);
+        return usersTable.checkPassword(Username_val, Password_val);
     }
 
     public boolean userExist(String username){
@@ -62,23 +66,39 @@ public class Vacation4UDatabase {
         return vacationsTable.getVacations(username, flightCompany, fromDate, toDate, baggage, baggageMin, ticketsNum, tickets_type, maxPricePerTicket, sourceCountry, destCountry, vacation_type, flight_type, hospitalityIncluded, minHospitalityRank);
     }
 
-    public boolean sendRequest(Request request) {
-        return purchaseRequestsTable.sendRequest(request);
+    public boolean sendRequest(PurchaseRequestData purchaseRequestData) {
+        return purchaseRequestsTable.sendRequest(purchaseRequestData);
     }
 
-    public List<PurchaseRequest> getMyRequests(String username) {
+    public List<PurchaseARequest> getMyPurchaseRequests(String username) {
         return purchaseRequestsTable.getMyRequests(username);
     }
 
-    public List<PurchaseRequest> getReceivedRequests(String username) {
+    public List<PurchaseARequest> getReceivedPurchaseRequests(String username) {
         return purchaseRequestsTable.getReceivedRequests(username);
     }
 
-    public boolean acceptRequest(int requestId) {
+    public List<TradeARequest> getMyTradeRequests(String username) {
+        return tradeRequestsTable.getMyRequests(username);
+    }
+
+    public List<TradeARequest> getReceivedTradeRequests(String username) {
+        return tradeRequestsTable.getReceivedRequests(username);
+    }
+
+    public boolean acceptPurchaseRequest(int requestId) {
         return purchaseRequestsTable.acceptRequest(requestId);
     }
 
-    public boolean rejectRequest(int requestId) {
+    public boolean rejectPurchaseRequest(int requestId) {
         return purchaseRequestsTable.rejectRequest(requestId);
+    }
+
+    public boolean acceptTradeRequest(int requestId) {
+        return tradeRequestsTable.acceptRequest(requestId);
+    }
+
+    public boolean rejectTradeRequest(int requestId) {
+        return tradeRequestsTable.rejectRequest(requestId);
     }
 }

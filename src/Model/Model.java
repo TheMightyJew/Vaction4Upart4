@@ -1,12 +1,13 @@
 package Model;
 
 
+import Model.Database.Vacation4UDatabase;
 import Model.Objects.*;
+import Model.Requests.PurchaseARequest;
+import Model.Requests.PurchaseRequestData;
+import Model.Requests.TradeARequest;
 
-import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Model implements IModel {
@@ -202,7 +203,7 @@ public class Model implements IModel {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//    }//creating a new PurchaseRequest Table
+//    }//creating a new PurchaseARequest Table
 //
 //    public void createNewFlightsToVacationsTable() {
 //        // SQLite connection string
@@ -451,28 +452,44 @@ public class Model implements IModel {
     }
 
     @Override
-    public boolean sendRequest(Request request) {
-        return vacation4UDatabase.sendRequest(request);
+    public boolean sendRequest(PurchaseRequestData purchaseRequestData) {
+        return vacation4UDatabase.sendRequest(purchaseRequestData);
     }
 
     @Override
-    public List<PurchaseRequest> getMyRequests(String username) {
-        return vacation4UDatabase.getMyRequests(username);
+    public List<PurchaseARequest> getMyPurchaseRequests(String username) {
+        return vacation4UDatabase.getMyPurchaseRequests(username);
     }
 
     @Override
-    public List<PurchaseRequest> getReceivedRequests(String username) {
-        return vacation4UDatabase.getReceivedRequests(username);
+    public List<PurchaseARequest> getReceivedPurchaseRequests(String username) {
+        return vacation4UDatabase.getReceivedPurchaseRequests(username);
+    }
+
+    public List<TradeARequest> getMyTradeRequests(String username) {
+        return vacation4UDatabase.getMyTradeRequests(username);
+    }
+
+    public List<TradeARequest> getReceivedTradeRequests(String username) {
+        return vacation4UDatabase.getReceivedTradeRequests(username);
     }
 
     @Override
-    public boolean acceptRequest(int requestId) {
-        return vacation4UDatabase.acceptRequest(requestId);
+    public boolean acceptPurchaseRequest(int requestId) {
+        return vacation4UDatabase.acceptPurchaseRequest(requestId);
     }
 
     @Override
-    public boolean rejectRequest(int requestId) {
-        return vacation4UDatabase.rejectRequest(requestId);
+    public boolean rejectPurchaseRequest(int requestId) {
+        return vacation4UDatabase.rejectPurchaseRequest(requestId);
+    }
+
+    public boolean acceptTradeRequest(int requestId) {
+        return vacation4UDatabase.acceptTradeRequest(requestId);
+    }
+
+    public boolean rejectTradeRequest(int requestId) {
+        return vacation4UDatabase.rejectTradeRequest(requestId);
     }
 
 //    @Override
@@ -496,7 +513,7 @@ public class Model implements IModel {
 //        for (String[] tr : toReject) {
 //            int requestNum = Integer.parseInt(tr[0]);
 //            if (requestNum != requestId)
-//                rejectRequest(requestNum);
+//                rejectPurchaseRequest(requestNum);
 //        }
 //        PayaplPayment ppp;
 //        VisaPayment vp;
@@ -528,7 +545,7 @@ public class Model implements IModel {
 //            vacationInfo[15] = VacationSell.Vacation_Status.sold.name();
 //            try {
 //                updateQuery(tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.class, vacationInfo, VacationsfieldNameEnum.Vacation_id + "='" + vacationId + "'");
-//                requestInfo[3] = PurchaseRequest.Request_Status.done.name();
+//                requestInfo[3] = PurchaseARequest.Request_Status.done.name();
 //                updateQuery(tableNameEnum.PurchaseRequests_Table.name(), PurchaseRequestsfieldNameEnum.class, requestInfo, PurchaseRequestsfieldNameEnum.PurchaseRequest_id.name() + "='" + requestId + "'");
 //            } catch (SQLException e) {
 //                e.printStackTrace();

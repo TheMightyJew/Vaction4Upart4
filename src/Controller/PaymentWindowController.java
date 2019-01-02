@@ -1,8 +1,6 @@
 package Controller;
 
 import Model.Model;
-import Model.Objects.PayaplPayment;
-import Model.Objects.VisaPayment;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;

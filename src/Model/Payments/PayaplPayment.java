@@ -1,4 +1,4 @@
-package Model.Objects;
+package Model.Payments;
 
 public class PayaplPayment extends Payment {
     private String email;

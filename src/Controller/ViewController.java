@@ -2,6 +2,8 @@ package Controller;
 
 import Model.Model;
 import Model.Objects.*;
+import Model.Requests.PurchaseARequest;
+import Model.Requests.PurchaseRequestData;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -15,7 +17,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -152,12 +153,12 @@ public class ViewController implements Initializable, Observer {
     }
 
     private void tabRequestsInit() {
-        Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>> cellFactory1
+        Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellFactory1
                 = //
-                new Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>>() {
+                new Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>() {
                     @Override
-                    public TableCell<PurchaseRequest, String> call(final TableColumn<PurchaseRequest, String> param) {
-                        final TableCell<PurchaseRequest, String> cell = new TableCell<PurchaseRequest, String>() {
+                    public TableCell<PurchaseARequest, String> call(final TableColumn<PurchaseARequest, String> param) {
+                        final TableCell<PurchaseARequest, String> cell = new TableCell<PurchaseARequest, String>() {
 
                             final Button btn = new Button("Buy");
 
@@ -195,8 +196,8 @@ public class ViewController implements Initializable, Observer {
                                         stage.show();
 
                                     });
-                                    PurchaseRequest purchaseRequest = getTableView().getItems().get(getIndex());
-                                    if (purchaseRequest.getStatus().equals(PurchaseRequest.Request_Status.accepted)) {
+                                    PurchaseARequest purchaseRequest = getTableView().getItems().get(getIndex());
+                                    if (purchaseRequest.getStatus().equals(PurchaseARequest.Request_Status.accepted)) {
                                         setGraphic(btn);
                                         setText(null);
                                     } else {
@@ -211,12 +212,12 @@ public class ViewController implements Initializable, Observer {
                 };
         tableView_myRequests = getRequestsTableView(tableView_myRequests, cellFactory1);
 
-        Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>> cellFactory2
+        Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellFactory2
                 = //
-                new Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>>() {
+                new Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>() {
                     @Override
-                    public TableCell<PurchaseRequest, String> call(final TableColumn<PurchaseRequest, String> param) {
-                        final TableCell<PurchaseRequest, String> cell = new TableCell<PurchaseRequest, String>() {
+                    public TableCell<PurchaseARequest, String> call(final TableColumn<PurchaseARequest, String> param) {
+                        final TableCell<PurchaseARequest, String> cell = new TableCell<PurchaseARequest, String>() {
 
                             final Button btn = new Button("Accept request");
 
@@ -229,8 +230,8 @@ public class ViewController implements Initializable, Observer {
                                 } else {
                                     btn.setOnAction(event -> {
 //                                        showAlert()
-                                        PurchaseRequest purchaseRequest = getTableView().getItems().get(getIndex());
-                                        model.acceptRequest(purchaseRequest.getId());
+                                        PurchaseARequest purchaseRequest = getTableView().getItems().get(getIndex());
+                                        model.acceptPurchaseRequest(purchaseRequest.getId());
                                         refreshRequests();
                                     });
                                     setGraphic(btn);
@@ -241,12 +242,12 @@ public class ViewController implements Initializable, Observer {
                         return cell;
                     }
                 };
-        Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>> cellFactory3
+        Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellFactory3
                 = //
-                new Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>>() {
+                new Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>() {
                     @Override
-                    public TableCell<PurchaseRequest, String> call(final TableColumn<PurchaseRequest, String> param) {
-                        final TableCell<PurchaseRequest, String> cell = new TableCell<PurchaseRequest, String>() {
+                    public TableCell<PurchaseARequest, String> call(final TableColumn<PurchaseARequest, String> param) {
+                        final TableCell<PurchaseARequest, String> cell = new TableCell<PurchaseARequest, String>() {
 
                             final Button btn = new Button("reject request");
 
@@ -259,8 +260,8 @@ public class ViewController implements Initializable, Observer {
                                 } else {
                                     btn.setOnAction(event -> {
 //                                        showAlert()
-                                        PurchaseRequest purchaseRequest = getTableView().getItems().get(getIndex());
-                                        model.rejectRequest(purchaseRequest.getId());
+                                        PurchaseARequest purchaseRequest = getTableView().getItems().get(getIndex());
+                                        model.rejectPurchaseRequest(purchaseRequest.getId());
                                         refreshRequests();
                                     });
                                     setGraphic(btn);
@@ -283,9 +284,9 @@ public class ViewController implements Initializable, Observer {
 
     private void refreshRequests() {
         tableView_myRequests.getItems().clear();
-        tableView_myRequests.getItems().addAll(model.getMyRequests(username));
+        tableView_myRequests.getItems().addAll(model.getMyPurchaseRequests(username));
         tableView_receivedRequests.getItems().clear();
-        tableView_receivedRequests.getItems().addAll(model.getReceivedRequests(username));
+        tableView_receivedRequests.getItems().addAll(model.getReceivedPurchaseRequests(username));
     }
 
     private void tabSearchInit() {
@@ -745,27 +746,27 @@ public class ViewController implements Initializable, Observer {
     }
 
 
-    private TableView<Flight> getRequestsTableView(TableView tableView, Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>>... cellFactorys) {
-        tableView = (TableView<PurchaseRequest>) tableView;
+    private TableView<Flight> getRequestsTableView(TableView tableView, Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>... cellFactorys) {
+        tableView = (TableView<PurchaseARequest>) tableView;
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 
-        TableColumn<PurchaseRequest, String> requester_username = new TableColumn<>("requester username");
-        TableColumn<PurchaseRequest, String> seller_username = new TableColumn<>("Seller username");
-        TableColumn<PurchaseRequest, String> sourceCountry = new TableColumn<>("Source country");
-        TableColumn<PurchaseRequest, String> destinationCountry = new TableColumn<>("Destination country");
-        TableColumn<PurchaseRequest, String> fromDate = new TableColumn<>("From date");
-        TableColumn<PurchaseRequest, String> toDate = new TableColumn<>("To date");
-        TableColumn<PurchaseRequest, String> ticketsType = new TableColumn<>("Tickets type");
-        TableColumn<PurchaseRequest, String> flight_Type = new TableColumn<>("Flight type");
-        TableColumn<PurchaseRequest, Number> max_Price_Per_Ticket = new TableColumn<>("Max price per ticket");
-        TableColumn<PurchaseRequest, Number> tickets_Quantity = new TableColumn<>("Tickets quantity");
-        TableColumn<PurchaseRequest, String> canBuyLess = new TableColumn<>("Can buy less");
-        TableColumn<PurchaseRequest, String> baggage_Included = new TableColumn<>("baggage included");
-        TableColumn<PurchaseRequest, Number> baggageLimit = new TableColumn<>("Baggage limit");
-        TableColumn<PurchaseRequest, String> hospitality_Included = new TableColumn<>("Hospitality included");
-        TableColumn<PurchaseRequest, Number> hospitality_Rank = new TableColumn<>("Hospitality rank");
-        TableColumn<PurchaseRequest, String> vacation_type = new TableColumn<>("Vacation type");
+        TableColumn<PurchaseARequest, String> requester_username = new TableColumn<>("requester username");
+        TableColumn<PurchaseARequest, String> seller_username = new TableColumn<>("Seller username");
+        TableColumn<PurchaseARequest, String> sourceCountry = new TableColumn<>("Source country");
+        TableColumn<PurchaseARequest, String> destinationCountry = new TableColumn<>("Destination country");
+        TableColumn<PurchaseARequest, String> fromDate = new TableColumn<>("From date");
+        TableColumn<PurchaseARequest, String> toDate = new TableColumn<>("To date");
+        TableColumn<PurchaseARequest, String> ticketsType = new TableColumn<>("Tickets type");
+        TableColumn<PurchaseARequest, String> flight_Type = new TableColumn<>("Flight type");
+        TableColumn<PurchaseARequest, Number> max_Price_Per_Ticket = new TableColumn<>("Max price per ticket");
+        TableColumn<PurchaseARequest, Number> tickets_Quantity = new TableColumn<>("Tickets quantity");
+        TableColumn<PurchaseARequest, String> canBuyLess = new TableColumn<>("Can buy less");
+        TableColumn<PurchaseARequest, String> baggage_Included = new TableColumn<>("baggage included");
+        TableColumn<PurchaseARequest, Number> baggageLimit = new TableColumn<>("Baggage limit");
+        TableColumn<PurchaseARequest, String> hospitality_Included = new TableColumn<>("Hospitality included");
+        TableColumn<PurchaseARequest, Number> hospitality_Rank = new TableColumn<>("Hospitality rank");
+        TableColumn<PurchaseARequest, String> vacation_type = new TableColumn<>("Vacation type");
 
 
         requester_username.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getUsername()));
@@ -789,11 +790,11 @@ public class ViewController implements Initializable, Observer {
 
         tableView.getColumns().addAll(requester_username, seller_username, sourceCountry, destinationCountry,fromDate,toDate, ticketsType, flight_Type, max_Price_Per_Ticket, tickets_Quantity, canBuyLess, baggage_Included, baggageLimit, hospitality_Included, hospitality_Rank, vacation_type);
 
-        for (Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>> cellCallback : cellFactorys) {
-            TableColumn<PurchaseRequest, String> column = new TableColumn<>();//Button
-            column.setCellFactory(new Callback<TableColumn<PurchaseRequest, String>, TableCell<PurchaseRequest, String>>() {
+        for (Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellCallback : cellFactorys) {
+            TableColumn<PurchaseARequest, String> column = new TableColumn<>();//Button
+            column.setCellFactory(new Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>() {
                 @Override
-                public TableCell<PurchaseRequest, String> call(TableColumn<PurchaseRequest, String> param) {
+                public TableCell<PurchaseARequest, String> call(TableColumn<PurchaseARequest, String> param) {
                     return null;
                 }
             });
@@ -940,7 +941,7 @@ public class ViewController implements Initializable, Observer {
                                             if (vacationSell.getVacation().getSeller_username().equals(username))
                                                 Massage.errorMassage("You can not request vacation from yourself");
                                             else {
-                                                if (model.sendRequest(new Request(username, vacationSell.getId())))
+                                                if (model.sendRequest(new PurchaseRequestData(username, vacationSell.getId())))
                                                     Massage.infoMassage("sent request");
                                                 else
                                                     Massage.errorMassage("set failed");

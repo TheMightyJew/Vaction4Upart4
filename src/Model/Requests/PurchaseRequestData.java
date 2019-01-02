@@ -1,11 +1,11 @@
-package Model.Objects;
+package Model.Requests;
 
-public class Request {
+public class PurchaseRequestData extends ARequestData{
 
     private String username;//user name of the request sender.
     private int vacationId;
 
-    public Request(String username, int vacationId) {
+    public PurchaseRequestData(String username, int vacationId) {
         this.username = username;
         this.vacationId = vacationId;
     }

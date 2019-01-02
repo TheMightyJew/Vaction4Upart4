@@ -1,4 +1,4 @@
-package Model.Objects;
+package Model.Payments;
 
 import java.time.LocalDate;
 

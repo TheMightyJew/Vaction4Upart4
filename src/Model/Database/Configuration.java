@@ -1,4 +1,6 @@
-package Model;
+package Model.Database;
+
+import Model.Model;
 
 import java.io.IOException;
 import java.io.InputStream;

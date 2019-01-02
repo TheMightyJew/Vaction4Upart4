@@ -1,4 +1,6 @@
-package Model;
+package Model.Database;
+
+import Model.Model;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.List;
 
 public abstract class AVacationdatabaseTable {
 
-    protected enum tableNameEnum {Users_table, Vacations_Table, Purchases_Table, Flights_table, FlightsToVacations_Table, PurchaseRequests_Table, Payments_Table, VisaPayments_Table, Paypalpayments_Table;}
+    protected enum tableNameEnum {Users_table, Vacations_Table, Purchases_Table, Flights_table, FlightsToVacations_Table, PurchaseRequests_Table,TradeRequests_Table, Payments_Table, VisaPayments_Table, Paypalpayments_Table;}
 
     protected void insertQuery(String table_name, Class<? extends Enum<?>> tableEnum, String[] insert_values) throws SQLException {
         String[] field_array = getNames(tableEnum);

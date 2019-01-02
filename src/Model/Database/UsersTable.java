@@ -1,10 +1,10 @@
-package Model;
+package Model.Database;
 
+import Model.Model;
 import Model.Objects.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
@@ -41,14 +41,6 @@ public class UsersTable extends AVacationdatabaseTable {
         }
     }
 
-    public void createUser(String Username_val, String Password_val, String Birthday_val, String FirstName_val, String LastName_val, String City_val, String State_val) {
-        String[] values = {Username_val, Password_val, Birthday_val, FirstName_val, LastName_val, City_val, State_val};
-        try {
-            insertQuery("Users_Table", UsersfieldNameEnum.class, values);
-        } catch (Exception ignore) {
-        }
-    }
-
     public User getUser(String Username_val) {
         List<String[]> result = selectQuery("Users_Table", UsersfieldNameEnum.Username + " = '" + Username_val + "'");
         if (result.size() != 1)
@@ -57,15 +49,6 @@ public class UsersTable extends AVacationdatabaseTable {
             String[] ans = result.get(0);
             LocalDate bDate = LocalDate.parse(ans[2]);
             return new User(ans[0], ans[1], bDate, ans[3], ans[4], ans[5], ans[6]);
-        }
-    }
-
-    public void updateUserInfo(String Username_key, String Username_val, String Password_val, String Birthday_val, String FirstName_val, String LastName_val, String City_val, String State_val) {
-        String[] values = {Username_val, Password_val, Birthday_val, FirstName_val, LastName_val, City_val, State_val};
-        try {
-            updateQuery(Model.tableNameEnum.Users_table.toString(), UsersfieldNameEnum.class, values, Model.UsersfieldNameEnum.Username.toString() + " = '" + Username_key + "'");
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -104,7 +87,7 @@ public class UsersTable extends AVacationdatabaseTable {
         }
     }
 
-    public boolean UsersTable_checkPassword(String Username_val, String Password_val) {
+    public boolean checkPassword(String Username_val, String Password_val) {
         List<String[]> result = selectQuery("Users_Table", UsersfieldNameEnum.Username + " = '" + Username_val + "'");
         if (result.size() != 1)
             return false;

@@ -1,7 +1,6 @@
-package Model;
+package Model.Database;
 
 import Model.Objects.Flight;
-import Model.Objects.PurchaseRequest;
 import Model.Objects.Vacation;
 import Model.Objects.VacationSell;
 
