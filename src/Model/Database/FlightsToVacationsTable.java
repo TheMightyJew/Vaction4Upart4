@@ -10,7 +10,7 @@ import java.util.List;
 public class FlightsToVacationsTable extends AVacationdatabaseTable {
 
     public boolean insertFlightToVacation(String flightID, String vacationID) {
-        return insertQuery(Model.Model.tableNameEnum.FlightsToVacations_Table.name(), FlightsToVacationsTable.FlightsToVacationsfieldNameEnum.class, new String[]{String.valueOf(vacationID), String.valueOf(flightID)});
+        return insertQuery(tableNameEnum.FlightsToVacations_Table.name(), FlightsToVacationsTable.FlightsToVacationsfieldNameEnum.class, new String[]{String.valueOf(vacationID), String.valueOf(flightID)});
     }
 
     public enum FlightsToVacationsfieldNameEnum {Vacation_id, Flight_id}
