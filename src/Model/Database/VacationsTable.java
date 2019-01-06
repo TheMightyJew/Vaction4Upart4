@@ -11,12 +11,17 @@ import java.util.List;
 
 public class VacationsTable extends AVacationdatabaseTable {
 
-    public String[] getVacationsString(String username) {
-        List<String[]> vaction_of_request = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsTable.VacationsfieldNameEnum.Vacation_id + "='" + username + "'");//get information to create vacation
+    public String[] getVacationsString(String vacationId) {
+        List<String[]> vaction_of_request = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsTable.VacationsfieldNameEnum.Vacation_id + "='" + vacationId + "'");//get information to create vacation
         if (vaction_of_request.size() != 1)
             return null;
         String[] vacation = vaction_of_request.get(0);
         return vacation;
+    }
+
+    public List<String[]> getVacationsByUsernameString(String username){
+        List<String[]> vaction_of_user = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.Publisher_Username + "='" + username + "'");//get information to create vacation
+        return vaction_of_user;
     }
 
     public boolean insertVcation(Vacation vacation, int baggage) {

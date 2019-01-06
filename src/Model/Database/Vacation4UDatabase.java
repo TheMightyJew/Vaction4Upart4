@@ -90,7 +90,7 @@ public class Vacation4UDatabase {
         List<String[]> results = purchaseRequestsTable.getMyRequestsSting(username);
         List<PurchaseARequest> ans = new ArrayList<>();
         for (String[] row : results) {
-            String[] vacation = vacationsTable.getVacationsString(username);
+            String[] vacation = vacationsTable.getVacationsString(row[2]);
             List<Flight> flightForCreateVacation = new ArrayList<>();
             List<String[]> flight_of_vacation = flightsToVacationsTable.getFlightsOfVacationsString(row[2]);
             for (String[] flight : flight_of_vacation) {

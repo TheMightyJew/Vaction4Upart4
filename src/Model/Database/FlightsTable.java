@@ -11,8 +11,8 @@ import java.util.List;
 public class FlightsTable extends AVacationdatabaseTable {
 
 
-    public List<String[]> getFlightInfoString(String s) {
-        List<String[]> flightInfo = selectQuery(AVacationdatabaseTable.tableNameEnum.Flights_table.name(), FlightsTable.FlightsfieldNameEnum.FlightID + "='" + s + "'");
+    public List<String[]> getFlightInfoString(String flightId) {
+        List<String[]> flightInfo = selectQuery(AVacationdatabaseTable.tableNameEnum.Flights_table.name(), FlightsTable.FlightsfieldNameEnum.FlightID + "='" + flightId + "'");
         return flightInfo;
     }
 
