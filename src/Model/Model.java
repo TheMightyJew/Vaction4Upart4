@@ -484,6 +484,11 @@ public class Model implements IModel {
         return vacation4UDatabase.rejectPurchaseRequest(requestId);
     }
 
+    @Override
+    public List<VacationSell> getMyVacations(String username) {
+        return null;
+    }
+
     public boolean acceptTradeRequest(int requestId) {
         return vacation4UDatabase.acceptTradeRequest(requestId);
     }
