@@ -53,4 +53,12 @@ public class FlightsTable extends AVacationdatabaseTable {
             e.printStackTrace();
         }
     }
+
+    public String[] getFlightByID(String flightID)
+    {
+        List<String[]> flights = selectQuery(tableNameEnum.Flights_table.name(),FlightsfieldNameEnum.FlightID.name()+"='"+flightID+"'");
+        if(flights.size()!=1)
+            return null;
+        return flights.get(0);
+    }
 }

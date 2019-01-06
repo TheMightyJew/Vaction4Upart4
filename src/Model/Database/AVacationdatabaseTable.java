@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class AVacationdatabaseTable {
 
-    protected enum tableNameEnum {Users_table, Vacations_Table, Purchases_Table, Flights_table, FlightsToVacations_Table, PurchaseRequests_Table,TradeRequests_Table, Payments_Table, VisaPayments_Table, Paypalpayments_Table;}
+    protected enum tableNameEnum {Users_table, Vacations_Table, Purchases_Table, Flights_table, FlightsToVacations_Table, PurchaseRequests_Table, TradeRequests_Table, Payments_Table, VisaPayments_Table, Paypalpayments_Table;}
 
     protected boolean insertQuery(String table_name, Class<? extends Enum<?>> tableEnum, String[] insert_values){
         try {
@@ -115,8 +115,7 @@ public abstract class AVacationdatabaseTable {
         }
     }//delete query pattern
 
-    protected static List<String[]> specificSelectQuery(String sql)
-    {
+    protected static List<String[]> specificSelectQuery(String sql) {
         List<String[]> table = new ArrayList<>();
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -136,5 +135,18 @@ public abstract class AVacationdatabaseTable {
             return null;
         }
         return table;
+    }
+
+    protected void joinQuery(String selectFromTable, List<String> joinOnTable, String whereCondition) {
+        StringBuilder sql = new StringBuilder("SELECT " + selectFromTable + ".*\n" +
+                "from ");
+        StringBuilder fromTable = new StringBuilder();
+        for (String s : joinOnTable) {
+            fromTable.append(s + ",");
+        }
+        fromTable.setLength(fromTable.length() - 1);
+        sql.append(fromTable + "\n");
+        sql.append("where ");
+        sql.append(whereCondition);
     }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 public class VacationsTable extends AVacationdatabaseTable {
 
     public String[] getVacationsString(String vacationId) {
-        List<String[]> vaction_of_request = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsTable.VacationsfieldNameEnum.Vacation_id + "='" + vacationId + "'");//get information to create vacation
-        if (vaction_of_request.size() != 1)
+        List<String[]> vactionbyid = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.Vacation_id + "='" + vacationId + "'");//get information to create vacation
+        if(vactionbyid.size()!=1)
             return null;
-        String[] vacation = vaction_of_request.get(0);
+        String[] vacation = vactionbyid.get(0);
         return vacation;
     }
 
@@ -176,5 +176,6 @@ public class VacationsTable extends AVacationdatabaseTable {
         }
         return ans;
     }
+
 
 }
