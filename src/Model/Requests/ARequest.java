@@ -3,8 +3,6 @@ package Model.Requests;
 public abstract class ARequest {
     public enum Request_Status {rejected, accepted, pending, done}
 
-    ;
-
     private int id;
     private Request_Status status;
 
