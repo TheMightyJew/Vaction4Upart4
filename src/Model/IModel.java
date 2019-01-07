@@ -94,8 +94,6 @@ public interface IModel {
      */
     boolean rejectPurchaseRequest(int requestId);
 
-    VacationSell getMyVacations(String username);
-
     /**
      * save payment to database using payment.tostring function.
      *

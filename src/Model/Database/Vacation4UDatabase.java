@@ -208,7 +208,7 @@ public class Vacation4UDatabase {
         return tradeRequestsTable.rejectRequest(requestId);
     }
 
-    public List<VacationSell> getMyVacation(String username) {
+    public List<VacationSell> getMyVacations(String username) {
         List<String[]> userVacationDetails = vacationsTable.getVacationsByUsernameString(username);
         for (String[] userVacationDetail : userVacationDetails) {
             List<String[]> IDflightOfvacation = flightsToVacationsTable.getFlightsOfVacationsString(userVacationDetail[0]);//This is for create the Vacation object of the offered vacation

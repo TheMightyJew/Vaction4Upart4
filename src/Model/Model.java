@@ -480,11 +480,6 @@ public class Model implements IModel {
         return vacation4UDatabase.getReceivedTradeRequests(username);
     }
 
-    public List<VacationSell> getMyVacation(String username)
-    {
-        return vacation4UDatabase.getMyVacation(username);
-    }
-
     @Override
     public boolean acceptPurchaseRequest(int requestId) {
         return vacation4UDatabase.acceptPurchaseRequest(requestId);
@@ -497,7 +492,7 @@ public class Model implements IModel {
 
     @Override
     public List<VacationSell> getMyVacations(String username) {
-        return null;
+        return vacation4UDatabase.getMyVacations(username);
     }
 
     public boolean acceptTradeRequest(int requestId) {
