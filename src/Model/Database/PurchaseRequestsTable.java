@@ -46,29 +46,10 @@ public class PurchaseRequestsTable extends AVacationdatabaseTable {
         }
     }
 
-    public List<PurchaseARequest> getMyRequests(String username) {
+
+    public List<String[]> getMyRequestsSting(String username){
         List<String[]> results = selectQuery(tableNameEnum.PurchaseRequests_Table.name(), PurchaseRequestsfieldNameEnum.Requester_Username + "='" + username + "'");
-        List<PurchaseARequest> ans = new ArrayList<>();
-        for (String[] row : results) {
-            List<String[]> vaction_of_request = selectQuery(tableNameEnum.Vacations_Table.name(), VacationsTable.VacationsfieldNameEnum.Vacation_id + "='" + row[2] + "'");//get information to create vacation
-            if (vaction_of_request.size() != 1)
-                return null;
-            String[] vacation = vaction_of_request.get(0);
-            List<Flight> flightForCreateVacation = new ArrayList<>();
-            List<String[]> flight_of_vacation = selectQuery(tableNameEnum.FlightsToVacations_Table.name(), FlightsToVacationsTable.FlightsToVacationsfieldNameEnum.Vacation_id + "='" + row[2] + "'");//need
-            for (String[] flight : flight_of_vacation) {
-                List<String[]> flightInfo = selectQuery(tableNameEnum.Flights_table.name(), FlightsTable.FlightsfieldNameEnum.FlightID + "='" + flight[1] + "'");
-                for (String[] fly : flightInfo) {
-                    Flight flightToList = new Flight(fly[7], fly[1], fly[2], LocalDate.parse(fly[3]), LocalDate.parse(fly[5]), fly[4], fly[6]);
-                    flightForCreateVacation.add(flightToList);
-                }
-            }
-            Vacation vac = new Vacation(vacation[1], LocalDate.parse(vacation[4]), LocalDate.parse(vacation[5]), Integer.parseInt(vacation[6]), Integer.parseInt(vacation[7]), vacation[8].equals("true"), vacation[2], vacation[3], (Integer.parseInt(vacation[12]) > 0), Integer.parseInt(vacation[12]), Vacation.Tickets_Type.valueOf(vacation[9]), flightForCreateVacation, Vacation.Flight_Type.valueOf(vacation[11]), Vacation.Vacation_Type.valueOf(vacation[10]), vacation[13].equals("true"), Integer.parseInt(vacation[14]));
-            VacationSell vacSell = new VacationSell(Integer.parseInt(vacation[0]), vac, VacationSell.Vacation_Status.valueOf(vacation[15]));
-            PurchaseARequest purchaseRequest = new PurchaseARequest(Integer.parseInt(row[0]), row[1], vacSell, PurchaseARequest.Request_Status.valueOf(row[3]));
-            ans.add(purchaseRequest);
-        }
-        return ans;
+        return results;
     }
 
     public List<PurchaseARequest> getReceivedRequests(String username) {

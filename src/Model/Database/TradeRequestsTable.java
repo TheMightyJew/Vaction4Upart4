@@ -1,14 +1,18 @@
 package Model.Database;
 
+import Model.Objects.Vacation;
 import Model.Requests.TradeARequest;
 import Model.Requests.TradeRequestData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class TradeRequestsTable extends AVacationdatabaseTable{
+public class TradeRequestsTable extends AVacationdatabaseTable {
     public enum TradeRequestsfieldNameEnum {TradeRequest_id, Offered_Vacation_id, Wanted_Vacation_id, Request_Status;}
 
     public TradeRequestsTable(String databaseName) {
@@ -36,7 +40,7 @@ public class TradeRequestsTable extends AVacationdatabaseTable{
 
     public boolean sendRequest(TradeRequestData request) {
         try {
-            String[] values = {null, ""+request.getOfferedVacation(), "" + request.getWantedVacation(), TradeARequest.Request_Status.pending.name()};
+            String[] values = {null, "" + request.getOfferedVacation(), "" + request.getWantedVacation(), TradeARequest.Request_Status.pending.name()};
             insertQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsTable.TradeRequestsfieldNameEnum.class, values);
             return true;
         } catch (Exception e) {
@@ -44,8 +48,25 @@ public class TradeRequestsTable extends AVacationdatabaseTable{
         }
     }
 
-    public List<TradeARequest> getMyRequests(String username) {
-        // TODO: 02-Jan-19
+    public List<String[]> getRequestByOfferdVacationID(String offeredVacationID) {
+        return selectQuery(tableNameEnum.TradeRequests_Table.name(), TradeRequestsfieldNameEnum.Offered_Vacation_id + "='" + offeredVacationID + "'");
+    }
+
+    public List<String[]> getRequestByWantedVacationID(String wantedvacationID) {
+        return selectQuery(tableNameEnum.TradeRequests_Table.name(), TradeRequestsfieldNameEnum.Wanted_Vacation_id + "='" + wantedvacationID + "'");
+
+    }
+
+//    public List<TradeARequest> getMyRequests(String username) {
+//        //TODO: 02-Jan-19
+//        List<TradeARequest> ans = new ArrayList<>();
+//        List<String[]> myVacations = selectQuery(tableNameEnum.Vacations_Table.name(), VacationsTable.VacationsfieldNameEnum.Publisher_Username + "='" + username + "'");
+//        List<String[]> myTradeRequest = new ArrayList<>();
+//        for (String[] myVacation : myVacations) {
+//            List<String[]> requestByVacation = selectQuery(tableNameEnum.TradeRequests_Table.name(), TradeRequestsfieldNameEnum.Offered_Vacation_id + "='" + myVacation[0] + "'");
+//            Vacation offeredvacation = new Vacation(myVacation[1], LocalDate.parse(myVacation[4]), LocalDate.parse(myVacation[5]), Integer.parseInt(myVacation[6]), Integer.parseInt(myVacation[7]), myVacation[8].equals("true"), myVacation[2], myVacation[3], (Integer.parseInt(myVacation[12]) > 0), Integer.parseInt(myVacation[12]), Vacation.Tickets_Type.valueOf(myVacation[9]), flightForCreateVacation, Vacation.Flight_Type.valueOf(vacation[11]), Vacation.Vacation_Type.valueOf(vacation[10]), vacation[13].equals("true"), Integer.parseInt(vacation[14]))
+//        }
+//
 //        List<String[]> results = selectQuery(tableNameEnum.PurchaseRequests_Table.name(), PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.Requester_Username + "='" + username + "'");
 //        List<PurchaseARequest> ans = new ArrayList<>();
 //        for (String[] row : results) {
@@ -68,8 +89,8 @@ public class TradeRequestsTable extends AVacationdatabaseTable{
 //            ans.add(purchaseRequest);
 //        }
 //        return ans;
-        return null;
-    }
+//        return null;
+//    }
 
     public List<TradeARequest> getReceivedRequests(String username) {
         // TODO: 02-Jan-19
@@ -105,29 +126,25 @@ public class TradeRequestsTable extends AVacationdatabaseTable{
     }
 
     public boolean acceptRequest(int requestId) {
-        // TODO: 02-Jan-19
-//        String[] values = selectQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'").get(0);
-//        values[3] = PurchaseARequest.Request_Status.accepted.toString();
-//        try {
-//            updateQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.class, values, PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'");
-//            return true;
-//        } catch (SQLException e) {
-//            return false;
-//        }
-        return false;
+        String[] values = selectQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsfieldNameEnum.TradeRequest_id + "='" + requestId + "'").get(0);
+        values[3] = TradeARequest.Request_Status.accepted.toString();
+        try {
+            updateQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsfieldNameEnum.class, values, TradeRequestsfieldNameEnum.TradeRequest_id + "='" + requestId + "'");
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public boolean rejectRequest(int requestId) {
-        // TODO: 02-Jan-19
-//        String[] values = selectQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'").get(0);
-//        values[3] = PurchaseARequest.Request_Status.rejected.toString();
-//        try {
-//            updateQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.class, values, PurchaseRequestsTable.PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'");
-//            return true;
-//        } catch (SQLException e) {
-//            return false;
-//        }
-        return false;
+        String[] values = selectQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsfieldNameEnum.TradeRequest_id + "='" + requestId + "'").get(0);
+        values[3] = TradeARequest.Request_Status.rejected.toString();
+        try {
+            updateQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsfieldNameEnum.class, values, TradeRequestsfieldNameEnum.TradeRequest_id + "='" + requestId + "'");
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
 }

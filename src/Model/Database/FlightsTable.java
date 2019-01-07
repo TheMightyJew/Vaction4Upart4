@@ -1,12 +1,30 @@
 package Model.Database;
 
 import Model.Model;
+import Model.Objects.Flight;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.List;
 
-public class FlightsTable {
+public class FlightsTable extends AVacationdatabaseTable {
+
+
+    public List<String[]> getFlightInfoString(String flightId) {
+        List<String[]> flightInfo = selectQuery(AVacationdatabaseTable.tableNameEnum.Flights_table.name(), FlightsTable.FlightsfieldNameEnum.FlightID + "='" + flightId + "'");
+        return flightInfo;
+    }
+
+    public boolean insertFlight(Flight flight) {
+        return insertQuery(tableNameEnum.Flights_table.name(), FlightsTable.FlightsfieldNameEnum.class, new String[]{null, flight.getSourceAirPort(), flight.getDestinationAirPort(), flight.getDepartDate().toString(), flight.getDepartHour(), flight.getLandDate().toString(), flight.getLandHour(), flight.getFlightCompany()});
+    }
+
+    public String getFlightId(Flight flight) {
+        String flightID = selectQuery(Model.tableNameEnum.Flights_table.name(), FlightsTable.FlightsfieldNameEnum.OriginAirport.name() + "='" + flight.getSourceAirPort() + "' AND " + FlightsTable.FlightsfieldNameEnum.DestinationAirport.name() + "='" + flight.getDestinationAirPort() + "' AND " + FlightsTable.FlightsfieldNameEnum.DepartureDate.name() + "='" + flight.getDepartDate().toString() + "' AND "
+                + FlightsTable.FlightsfieldNameEnum.DepartureTime.name() + "='" + flight.getDepartHour() + "' AND " + FlightsTable.FlightsfieldNameEnum.ArrivalDate.name() + "='" + flight.getLandDate().toString() + "' AND " + FlightsTable.FlightsfieldNameEnum.ArrivalTime.name() + "='" + flight.getLandHour() + "' AND " + FlightsTable.FlightsfieldNameEnum.FlightComapny.name() + "='" + flight.getFlightCompany() + "'").get(0)[0];
+        return flightID;
+    }
 
     public enum FlightsfieldNameEnum {FlightID, OriginAirport, DestinationAirport, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, FlightComapny;}
 
@@ -34,5 +52,13 @@ public class FlightsTable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String[] getFlightByID(String flightID)
+    {
+        List<String[]> flights = selectQuery(tableNameEnum.Flights_table.name(),FlightsfieldNameEnum.FlightID.name()+"='"+flightID+"'");
+        if(flights.size()!=1)
+            return null;
+        return flights.get(0);
     }
 }

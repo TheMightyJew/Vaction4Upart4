@@ -19,6 +19,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -825,11 +827,29 @@ public class ViewController implements Initializable, Observer {
     }
 
     public void cleanFilters() {
-        for (Node node : gridPane_searchFilters.getChildren()) {
-            if (node instanceof TextField)
-                ((TextField) node).clear();
-        }
+        textField_hospitality.setDisable(true);
+        textField_baggage.setDisable(true);
+        clearRec(gridPane_searchFilters);
     }
+
+    private void clearRec(Pane pane){
+        for(Node node:pane.getChildren())
+            if(node instanceof Pane)
+                clearRec((Pane)node);
+            else if(node instanceof TextField){
+                ((TextField) node).clear();;
+            }
+            else if(node instanceof CheckBox){
+                ((CheckBox) node).setSelected(false);;
+            }
+            else if(node instanceof ComboBox){
+                ((ComboBox) node).getItems().clear();
+            }
+            else if(node instanceof DatePicker){
+                ((DatePicker) node).setValue(null);
+            }
+    }
+
 
 
     private TableView<Flight> getRequestsTableView(TableView tableView, Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>... cellFactorys) {

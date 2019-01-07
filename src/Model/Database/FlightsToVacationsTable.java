@@ -5,8 +5,13 @@ import Model.Model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.List;
 
-public class FlightsToVacationsTable {
+public class FlightsToVacationsTable extends AVacationdatabaseTable {
+
+    public boolean insertFlightToVacation(String flightID, String vacationID) {
+        return insertQuery(tableNameEnum.FlightsToVacations_Table.name(), FlightsToVacationsTable.FlightsToVacationsfieldNameEnum.class, new String[]{String.valueOf(vacationID), String.valueOf(flightID)});
+    }
 
     public enum FlightsToVacationsfieldNameEnum {Vacation_id, Flight_id}
 
@@ -29,5 +34,10 @@ public class FlightsToVacationsTable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String[]> getFlightsOfVacationsString(String vacationId) {
+        List<String[]> flight_of_vacation = selectQuery(AVacationdatabaseTable.tableNameEnum.FlightsToVacations_Table.name(), FlightsToVacationsTable.FlightsToVacationsfieldNameEnum.Vacation_id + "='" + vacationId + "'");//need
+        return flight_of_vacation;
     }
 }

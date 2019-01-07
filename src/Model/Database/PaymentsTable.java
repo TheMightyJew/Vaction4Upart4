@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-public class PaymentsTable {
+public class PaymentsTable extends AVacationdatabaseTable {
 
     public enum PaymentfieldsNameEnum {PaymentID, Username, VacationID, Payment_Method;}
 

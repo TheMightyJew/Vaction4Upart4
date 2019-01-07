@@ -104,4 +104,11 @@ public interface IModel {
      * @return
      */
 //    boolean payForVacation(int requestId, Payment payment);
+
+    /**
+     * returns all the vacations sells of the listed username
+     * @param username the username of the user.
+     * @return list of all his vacations.
+     */
+    List<VacationSell> getMyVacations(String username);
 }
