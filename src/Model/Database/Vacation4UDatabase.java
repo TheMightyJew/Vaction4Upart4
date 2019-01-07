@@ -4,6 +4,7 @@ import Model.Objects.*;
 import Model.Requests.PurchaseARequest;
 import Model.Requests.PurchaseRequestData;
 import Model.Requests.TradeARequest;
+import Model.Requests.TradeRequestData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +15,7 @@ import java.util.List;
 public class Vacation4UDatabase {
     private FlightsTable flightsTable;
     private FlightsToVacationsTable flightsToVacationsTable;
-    private PaymentsTable paymentsTable;
+//    private PaymentsTable paymentsTable;
     private PurchaseRequestsTable purchaseRequestsTable;
     private UsersTable usersTable;
     private VacationsTable vacationsTable;
@@ -32,10 +33,11 @@ public class Vacation4UDatabase {
 
         flightsTable = new FlightsTable(databaseName);
         flightsToVacationsTable = new FlightsToVacationsTable(databaseName);
-        paymentsTable = new PaymentsTable(databaseName);
+//        paymentsTable = new PaymentsTable(databaseName);
         purchaseRequestsTable = new PurchaseRequestsTable(databaseName);
         usersTable = new UsersTable(databaseName);
         vacationsTable = new VacationsTable(databaseName);
+        tradeRequestsTable = new TradeRequestsTable(databaseName);
     }
 
     public boolean createUser(User user) {
@@ -68,6 +70,9 @@ public class Vacation4UDatabase {
 
     public boolean sendRequest(PurchaseRequestData purchaseRequestData) {
         return purchaseRequestsTable.sendRequest(purchaseRequestData);
+    }
+    public boolean sendTradeRequest(TradeRequestData tradeRequestData) {
+        return tradeRequestsTable.sendRequest(tradeRequestData);
     }
 
     public List<PurchaseARequest> getMyPurchaseRequests(String username) {

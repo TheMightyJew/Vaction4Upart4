@@ -6,6 +6,7 @@ import Model.Objects.*;
 import Model.Requests.PurchaseARequest;
 import Model.Requests.PurchaseRequestData;
 import Model.Requests.TradeARequest;
+import Model.Requests.TradeRequestData;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,27 +15,28 @@ public class Model implements IModel {
     //attributes
     private String databaseName;
 
+
     //Enums...
     public enum UsersfieldNameEnum {
         Username, Password, Birthday, FirstName, LastName, City, State;
     }
 
 
-    public enum PurchaseRequestsfieldNameEnum {PurchaseRequest_id, Requester_Username, Vacation_id, Request_Status;}
-
-    public enum FlightsToVacationsfieldNameEnum {Vacation_id, Flight_id}
-
-    public enum VacationsfieldNameEnum {Vacation_id, Publisher_Username, Source_Country, Destination_Country, From_Date, To_Date, Price_Per_ticket, Num_Of_Passengers, Can_Buy_less_Tickets, Tickets_Type, Vacation_Type, Flight_Type, Baggage_Limit, Lodging_Included, Lodging_Rating, Vacation_Status;}
-
-//    public enum PurchasesfieldNameEnum {Username, VacationID, PaymentCompany, CardNumber, CVV, ValidDate, UserID, FirstName, LastName;}
-
-    public enum FlightsfieldNameEnum {FlightID, OriginAirport, DestinationAirport, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, FlightComapny;}
-
-    public enum PaymentfieldsNameEnum {PaymentID, Username, VacationID, Payment_Method;}
-
-    public enum VisePaymentfieldsEnum {PaymentID, CardNumber, CVV, ValidDate, UserID, FirstName, LastName;}
-
-    public enum PaypalPaymentfieldsEnum {PaymentID, email, password;}
+//    public enum PurchaseRequestsfieldNameEnum {PurchaseRequest_id, Requester_Username, Vacation_id, Request_Status;}
+//
+//    public enum FlightsToVacationsfieldNameEnum {Vacation_id, Flight_id}
+//
+//    public enum VacationsfieldNameEnum {Vacation_id, Publisher_Username, Source_Country, Destination_Country, From_Date, To_Date, Price_Per_ticket, Num_Of_Passengers, Can_Buy_less_Tickets, Tickets_Type, Vacation_Type, Flight_Type, Baggage_Limit, Lodging_Included, Lodging_Rating, Vacation_Status;}
+//
+////    public enum PurchasesfieldNameEnum {Username, VacationID, PaymentCompany, CardNumber, CVV, ValidDate, UserID, FirstName, LastName;}
+//
+//    public enum FlightsfieldNameEnum {FlightID, OriginAirport, DestinationAirport, DepartureDate, DepartureTime, ArrivalDate, ArrivalTime, FlightComapny;}
+//
+//    public enum PaymentfieldsNameEnum {PaymentID, Username, VacationID, Payment_Method;}
+//
+//    public enum VisePaymentfieldsEnum {PaymentID, CardNumber, CVV, ValidDate, UserID, FirstName, LastName;}
+//
+//    public enum PaypalPaymentfieldsEnum {PaymentID, email, password;}
 
 
     public enum tableNameEnum {Users_table, Vacations_Table, Purchases_Table, Flights_table, FlightsToVacations_Table, PurchaseRequests_Table, Payments_Table, VisaPayments_Table, Paypalpayments_Table;}
@@ -429,7 +431,6 @@ public class Model implements IModel {
         return vacation4UDatabase.userExist(username);
     }
 
-
     //TODO: Functions.
     @Override
     public boolean createUser(User user) {
@@ -454,6 +455,11 @@ public class Model implements IModel {
     @Override
     public boolean sendRequest(PurchaseRequestData purchaseRequestData) {
         return vacation4UDatabase.sendRequest(purchaseRequestData);
+    }
+
+    @Override
+    public boolean sendTradeRequest(TradeRequestData tradeRequestData) {
+        return vacation4UDatabase.sendTradeRequest(tradeRequestData);
     }
 
     @Override
@@ -482,6 +488,11 @@ public class Model implements IModel {
     @Override
     public boolean rejectPurchaseRequest(int requestId) {
         return vacation4UDatabase.rejectPurchaseRequest(requestId);
+    }
+
+    @Override
+    public VacationSell getMyVacations(String username) {
+        return null;
     }
 
     public boolean acceptTradeRequest(int requestId) {

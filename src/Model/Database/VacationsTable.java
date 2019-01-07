@@ -80,7 +80,7 @@ public class VacationsTable extends AVacationdatabaseTable {
                 "ORDER BY Vacations_Table.Vacation_id ASC;";
         List<VacationSell> optinalVacation = new ArrayList<>();
         List<VacationSell> ans = new ArrayList<>();
-        List<String[]> table = new ArrayList<>();
+        List<String[]> table;
 
         table = specificSelectQuery(sql);
         if (table == null)

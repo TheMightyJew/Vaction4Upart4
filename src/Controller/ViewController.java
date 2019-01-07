@@ -4,10 +4,14 @@ import Model.Model;
 import Model.Objects.*;
 import Model.Requests.PurchaseARequest;
 import Model.Requests.PurchaseRequestData;
+import Model.Requests.TradeARequest;
+import Model.Requests.TradeRequestData;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -120,11 +124,8 @@ public class ViewController implements Initializable, Observer {
     //requests tab
     public TableView tableView_myRequests;
     public TableView tableView_receivedRequests;
-
-
-    private final String directoryPath = "C:/DATABASE/";//////
-    private final String databaseName = "database.db";
-    private final String tableName = "Users_Table";
+    public TableView tableView_mySwitchRequests;
+    public TableView tableView_receivedSwitchRequests;
 
     private Model model;
     private String username = "";
@@ -275,6 +276,71 @@ public class ViewController implements Initializable, Observer {
         tableView_receivedRequests = getRequestsTableView(tableView_receivedRequests, cellFactory2, cellFactory3);
 
 
+        tableView_mySwitchRequests = getTradeRequestsTableView(tableView_mySwitchRequests);
+
+        Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellFactory5
+                = //
+                new Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>>() {
+                    @Override
+                    public TableCell<TradeARequest, String> call(final TableColumn<TradeARequest, String> param) {
+                        final TableCell<TradeARequest, String> cell = new TableCell<TradeARequest, String>() {
+
+                            final Button btn = new Button("Accept request");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    btn.setOnAction(event -> {
+//                                        showAlert()
+                                        TradeARequest tradeARequest = getTableView().getItems().get(getIndex());
+                                        model.acceptTradeRequest(tradeARequest.getId());
+                                        refreshRequests();
+                                    });
+                                    setGraphic(btn);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellFactory6
+                = //
+                new Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>>() {
+                    @Override
+                    public TableCell<TradeARequest, String> call(final TableColumn<TradeARequest, String> param) {
+                        final TableCell<TradeARequest, String> cell = new TableCell<TradeARequest, String>() {
+
+                            final Button btn = new Button("reject request");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    btn.setOnAction(event -> {
+//                                        showAlert()
+                                        TradeARequest tradeARequest = getTableView().getItems().get(getIndex());
+                                        model.rejectTradeRequest(tradeARequest.getId());
+                                        refreshRequests();
+                                    });
+                                    setGraphic(btn);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+        tableView_receivedSwitchRequests = getTradeRequestsTableView(tableView_receivedSwitchRequests, cellFactory5, cellFactory6);
+
+
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == requestTab) {
                 refreshRequests();
@@ -282,11 +348,31 @@ public class ViewController implements Initializable, Observer {
         });
     }
 
+    private static <T> Callback<TableColumn<T, String>, TableCell<T, String>> getCallback(EventHandler<ActionEvent> value) {
+        return param ->
+                new TableCell<T, String>() {
+
+                    final Button btn = new Button("Buy");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(value);
+                        }
+                    }
+                };
+    }
+
     private void refreshRequests() {
         tableView_myRequests.getItems().clear();
         tableView_myRequests.getItems().addAll(model.getMyPurchaseRequests(username));
         tableView_receivedRequests.getItems().clear();
         tableView_receivedRequests.getItems().addAll(model.getReceivedPurchaseRequests(username));
+
     }
 
     private void tabSearchInit() {
@@ -562,7 +648,7 @@ public class ViewController implements Initializable, Observer {
         event.consume();
     }
 
-    public void baggagePublishClick(Event event) {
+    public void baggagePublishClick() {
         if (baggagePublish.isSelected() == false) {
             baggageLimitPublish.setText("0");
             baggageLimitPublish.setDisable(true);
@@ -572,7 +658,7 @@ public class ViewController implements Initializable, Observer {
         }
     }
 
-    public void hospitalityPublishClick(Event event) {
+    public void hospitalityPublishClick() {
         if (hospitalityPublish.isSelected() == false) {
             hospitalityRankPublish.setText("0");
             hospitalityRankPublish.setDisable(true);
@@ -582,7 +668,7 @@ public class ViewController implements Initializable, Observer {
         }
     }
 
-    public void partTicketsPublishClick(Event event) {
+    public void partTicketsPublishClick() {
         if (partTicketsPublish.isSelected()) {
             if ((isTicketsMore1()) == false) {
                 Massage.errorMassage("You can allow this only if you sell more than 1 ticket");
@@ -600,7 +686,7 @@ public class ViewController implements Initializable, Observer {
         }
     }
 
-    public void publishPublish(Event event) {
+    public void publishPublish() {
         if (isPublishPorblem() == false) {
             if (model.publishVacation(new Vacation(username, fromDatePublish.getValue(), toDatePublish.getValue(), Integer.parseInt(pricePublish.getText()), Integer.parseInt(ticketsNumPublish.getText()), partTicketsPublish.isSelected(), sourcePublish.getText(), destinationPublish.getText(), baggagePublish.isSelected(), Integer.parseInt(baggageLimitPublish.getText()), ticketsClassPublish.getValue(), flights, flightTypePublish.getValue(), vacationTypePublish.getValue(), hospitalityPublish.isSelected(), Integer.parseInt(hospitalityRankPublish.getText()))) == true) {
                 Massage.infoMassage("Vacation sell published successfully");
@@ -610,7 +696,7 @@ public class ViewController implements Initializable, Observer {
         }
     }
 
-    public void reserPublish(ActionEvent event) {
+    public void reserPublish() {
         if (Massage.confirmMassage("Are you sure you want to reset these details?")) {
             clearPublish();
         }
@@ -665,7 +751,7 @@ public class ViewController implements Initializable, Observer {
             Massage.errorMassage("From time must be before To time");
             return true;
         }
-        if(fromDatePublish.getValue().isBefore(LocalDate.now())){
+        if (fromDatePublish.getValue().isBefore(LocalDate.now())) {
             Massage.errorMassage("From time must be in the future");
             return true;
         }
@@ -738,7 +824,7 @@ public class ViewController implements Initializable, Observer {
         }
     }
 
-    public void cleanFilters(ActionEvent actionEvent) {
+    public void cleanFilters() {
         for (Node node : gridPane_searchFilters.getChildren()) {
             if (node instanceof TextField)
                 ((TextField) node).clear();
@@ -787,17 +873,10 @@ public class ViewController implements Initializable, Observer {
         vacation_type.setCellValueFactory(param -> new SimpleObjectProperty<>(String.valueOf(param.getValue().getVacationSell().getVacation().getVacation_type())));
 
 
-
-        tableView.getColumns().addAll(requester_username, seller_username, sourceCountry, destinationCountry,fromDate,toDate, ticketsType, flight_Type, max_Price_Per_Ticket, tickets_Quantity, canBuyLess, baggage_Included, baggageLimit, hospitality_Included, hospitality_Rank, vacation_type);
+        tableView.getColumns().addAll(requester_username, seller_username, sourceCountry, destinationCountry, fromDate, toDate, ticketsType, flight_Type, max_Price_Per_Ticket, tickets_Quantity, canBuyLess, baggage_Included, baggageLimit, hospitality_Included, hospitality_Rank, vacation_type);
 
         for (Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellCallback : cellFactorys) {
             TableColumn<PurchaseARequest, String> column = new TableColumn<>();//Button
-            column.setCellFactory(new Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>() {
-                @Override
-                public TableCell<PurchaseARequest, String> call(TableColumn<PurchaseARequest, String> param) {
-                    return null;
-                }
-            });
             column.setCellFactory(cellCallback);
             tableView.getColumns().add(column);
         }
@@ -805,11 +884,82 @@ public class ViewController implements Initializable, Observer {
         return tableView;
     }
 
+    private TableView<Flight> getTradeRequestsTableView(TableView tableView, Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>>... cellFactorys) {
+        tableView = (TableView<TradeARequest>) tableView;
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableColumn<TradeARequest, String> seeRequesterVacation = new TableColumn<>("Requester Vacation");
+        TableColumn<TradeARequest, String> seeMyVacation = new TableColumn<>("My Vacation");
+
+        seeRequesterVacation.setCellFactory(param -> new TableCell<TradeARequest, String>() {
+
+            final Button btn = new Button("see wanted vacation");
+
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    btn.setOnAction(event -> {
+                        TradeARequest tradeARequest = getTableView().getItems().get(getIndex());
+                        TableView<VacationSell> vacation = getVacationsTable();
+                        vacation.getItems().add(tradeARequest.getWanted());
+                        Stage stage = new Stage();
+                        stage.setResizable(false);
+                        stage.setTitle("vacation " + tradeARequest.getWanted().getId());
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.setScene(new Scene(vacation));
+                        stage.show();
+
+                    });
+                    setGraphic(btn);
+                    setText(null);
+                }
+            }
+        });
+        seeRequesterVacation.setCellFactory(param -> new TableCell<TradeARequest, String>() {
+
+            final Button btn = new Button("see offered vacation");
+
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    btn.setOnAction(event -> {
+                        TradeARequest tradeARequest = getTableView().getItems().get(getIndex());
+                        TableView<VacationSell> vacation = getVacationsTable();
+                        vacation.getItems().add(tradeARequest.getOffer());
+                        Stage stage = new Stage();
+                        stage.setResizable(false);
+                        stage.setTitle("vacation " + tradeARequest.getWanted().getId());
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.setScene(new Scene(vacation));
+                        stage.show();
+
+                    });
+                    setGraphic(btn);
+                    setText(null);
+                }
+            }
+        });
+
+        for (Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellCallback : cellFactorys) {
+            TableColumn<TradeARequest, String> column = new TableColumn<>();//Button
+            column.setCellFactory(cellCallback);
+            tableView.getColumns().add(column);
+        }
+        return null;
+    }
+
 
     private TableView<Flight> getFlightsTableView() {
         TableView<Flight> flightTableView = new TableView<>();
         flightTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+        setTableViewHeight(flightTableView);
 
         TableColumn<Flight, String> flightCompany = new TableColumn<>("Flight company");
         TableColumn<Flight, String> sourceAirPort = new TableColumn<>("Source airport");
@@ -829,11 +979,10 @@ public class ViewController implements Initializable, Observer {
         return flightTableView;
     }
 
-    public void searchByFilters(ActionEvent actionEvent) {
-
+    private TableView<VacationSell> getVacationsTable() {
         TableView<VacationSell> vacations = new TableView<>();
         vacations.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
+        setTableViewHeight(vacations);
 
         TableColumn<VacationSell, String> seller_username = new TableColumn<>("Seller username");
         TableColumn<VacationSell, String> sourceCountry = new TableColumn<>("Source country");
@@ -868,7 +1017,6 @@ public class ViewController implements Initializable, Observer {
         vacation_type.setCellValueFactory(param -> new SimpleObjectProperty<>(String.valueOf(param.getValue().getVacation().getVacation_type())));
 
         TableColumn<VacationSell, String> seeMore_buttons = new TableColumn<>();//Button
-        TableColumn<VacationSell, String> requset_buttons = new TableColumn<>();//Button
 
         Callback<TableColumn<VacationSell, String>, TableCell<VacationSell, String>> cellFactory
                 = //
@@ -889,21 +1037,21 @@ public class ViewController implements Initializable, Observer {
 
                                     btn.setOnAction(event -> {
                                         VacationSell vacationSell = getTableView().getItems().get(getIndex());
+                                        ScrollPane scrollPane = new ScrollPane();
+                                        TableView<Flight> flightsTableView = getFlightsTableView();
+                                        flightsTableView.getItems().addAll(vacationSell.getVacation().getFlights());
+//                                        flightsTableView.setPrefWidth(2500);
+                                        scrollPane.setContent(flightsTableView);
+//                                        flightsTableView.setPrefHeight(600);
+//                                        scrollPane.setPrefHeight(600);
+//                                        scrollPane.setPrefWidth(800);
+                                        Scene scene = new Scene(scrollPane);
                                         Stage stage = new Stage();
 //                                      stage.getIcons().add(new Image(this.getClass().getResourceAsStream("icon.png")));
                                         stage.setAlwaysOnTop(false);
                                         stage.setResizable(false);
                                         stage.setTitle("vacation " + vacationSell.getId() + " flights");
                                         stage.initModality(Modality.APPLICATION_MODAL);
-                                        ScrollPane scrollPane = new ScrollPane();
-                                        TableView<Flight> flightsTableView = getFlightsTableView();
-                                        flightsTableView.getItems().addAll(vacationSell.getVacation().getFlights());
-                                        flightsTableView.setPrefWidth(2500);
-                                        scrollPane.setContent(flightsTableView);
-                                        flightsTableView.setPrefHeight(600);
-                                        scrollPane.setPrefHeight(600);
-                                        scrollPane.setPrefWidth(800);
-                                        Scene scene = new Scene(scrollPane);
                                         stage.setScene(scene);
                                         stage.show();
                                     });
@@ -917,6 +1065,19 @@ public class ViewController implements Initializable, Observer {
                 };
 
         seeMore_buttons.setCellFactory(cellFactory);
+
+        vacations.getColumns().addAll(seller_username, sourceCountry, destinationCountry, ticketsType, fromDate, toDate, flight_Type, max_Price_Per_Ticket, tickets_Quantity, canBuyLess, baggage_Included, baggageLimit, hospitality_Included, hospitality_Rank, vacation_type, seeMore_buttons);
+
+        return vacations;
+    }
+
+    public void searchByFilters() {
+
+        TableView<VacationSell> vacations = getVacationsTable();
+
+        TableColumn<VacationSell, String> request_buttons = new TableColumn<>();//Button
+        TableColumn<VacationSell, String> switch_request_buttons = new TableColumn<>();//Button
+
 
         Callback<TableColumn<VacationSell, String>, TableCell<VacationSell, String>> cellFactory2
                 = //
@@ -958,9 +1119,65 @@ public class ViewController implements Initializable, Observer {
                     }
                 };
 
-        requset_buttons.setCellFactory(cellFactory2);
+        request_buttons.setCellFactory(cellFactory2);
 
-        vacations.getColumns().addAll(seller_username, sourceCountry, destinationCountry, ticketsType, fromDate, toDate, flight_Type, max_Price_Per_Ticket, tickets_Quantity, canBuyLess, baggage_Included, baggageLimit, hospitality_Included, hospitality_Rank, vacation_type, seeMore_buttons, requset_buttons);
+        Callback<TableColumn<VacationSell, String>, TableCell<VacationSell, String>> cellFactory3
+                = //
+                new Callback<TableColumn<VacationSell, String>, TableCell<VacationSell, String>>() {
+                    @Override
+                    public TableCell<VacationSell, String> call(final TableColumn<VacationSell, String> param) {
+                        final TableCell<VacationSell, String> cell = new TableCell<VacationSell, String>() {
+
+                            final Button btn = new Button("request switch");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+
+                                    btn.setOnAction(event -> {
+                                        if (loggedIn) {
+                                            VacationSell vacationSell = getTableView().getItems().get(getIndex());
+                                            if (vacationSell.getVacation().getSeller_username().equals(username))
+                                                Massage.errorMassage("You can not request vacation from yourself");
+                                            else {
+                                                TableView<VacationSell> myVacations = getMyVacationsTable(vacationSell.getId());
+                                                myVacations.getItems().addAll(model.getMyVacations(username));
+//                                                myVacations.setPrefWidth(2500);
+                                                ScrollPane scrollPane = new ScrollPane();
+                                                scrollPane.setContent(myVacations);
+//                                                myVacations.setPrefHeight(600);
+//                                                scrollPane.setPrefHeight(600);
+//                                                scrollPane.setPrefWidth(800);
+                                                Scene scene = new Scene(scrollPane);
+                                                Stage stage = new Stage();
+//                                      stage.getIcons().add(new Image(this.getClass().getResourceAsStream("icon.png")));
+                                                stage.setAlwaysOnTop(false);
+                                                stage.setResizable(false);
+                                                stage.setTitle("vacation " + vacationSell.getId() + " flights");
+                                                stage.initModality(Modality.APPLICATION_MODAL);
+                                                stage.setScene(scene);
+                                                stage.show();
+                                            }
+                                        } else
+                                            Massage.errorMassage("You should login to request and buy vacation");
+                                    });
+                                    setGraphic(btn);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+
+        request_buttons.setCellFactory(cellFactory3);
+
+
+        vacations.getColumns().addAll(request_buttons, switch_request_buttons);
 
         List<VacationSell> vacationSells = model.getVacations(username,
                 textField_flightCompany.getText().equals("") ? null : textField_flightCompany.getText(),
@@ -981,8 +1198,8 @@ public class ViewController implements Initializable, Observer {
 
         //add comboBox_flightType.getSelectionModel().getSelectedItem() == null ? null : Vacation.Flight_Type.valueOf(comboBox_flightType.getSelectionModel().getSelectedItem().toString()),
         vacations.getItems().addAll(vacationSells);
-        vacations.setPrefWidth(2500);
-        vacations.setPrefHeight(600);
+//        vacations.setPrefWidth(2500);
+//        vacations.setPrefHeight(600);
         Stage stage = new Stage();
         stage.setAlwaysOnTop(false);
         stage.setResizable(false);
@@ -990,10 +1207,90 @@ public class ViewController implements Initializable, Observer {
         stage.initModality(Modality.APPLICATION_MODAL);
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vacations);
-        scrollPane.setPrefWidth(800);
-        scrollPane.setPrefHeight(600);
+//        scrollPane.setPrefWidth(800);
+//        scrollPane.setPrefHeight(600);
         Scene scene = new Scene(scrollPane);
         stage.setScene(scene);
         stage.show();
     }
+
+    private TableView<VacationSell> getMyVacationsTable(int requestedVacationId) {
+        TableView<VacationSell> myVacations = getVacationsTable();
+        TableColumn<VacationSell, String> switchRequests = new TableColumn<>();
+        switchRequests.setCellFactory(param ->
+                new TableCell<VacationSell, String>() {
+
+                    final Button btn = new Button("see more");
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            btn.setOnAction(event -> {
+                                VacationSell vacationSell = getTableView().getItems().get(getIndex());
+                                if (model.sendTradeRequest(new TradeRequestData(requestedVacationId, vacationSell.getId())))
+                                    Massage.infoMassage("sent request");
+                                else
+                                    Massage.errorMassage("set failed");
+                            });
+                            setGraphic(btn);
+                            setText(null);
+                        }
+                    }
+                }
+        );
+        myVacations.getColumns().add(switchRequests);
+        return myVacations;
+    }
+
+    private <T> void setTableViewHeight(TableView<T> tableView) {
+        tableView.setFixedCellSize(25);
+        tableView.getItems().addListener((ListChangeListener<T>) c ->
+                tableView.setPrefHeight((tableView.getFixedCellSize() + 0.05) * (tableView.getItems().size()) + 25)
+        );
+    }
 }
+
+//class buttonTableCell<T> extends TableCell<String,T> {
+//    final Button btn;
+//
+//    public buttonTableCell(String buttonName, EventHandler<ActionEvent> eventHandler) {
+//        btn = new Button(buttonName);
+//        btn.setOnAction(eventHandler);
+//    }
+//
+//    @Override
+//    protected void updateItem(T item, boolean empty) {
+//        super.updateItem(item, empty);
+//        if (empty) {
+//            setGraphic(null);
+//            setText(null);
+//        } else {
+////            if (purchaseRequest.getStatus().equals(PurchaseARequest.Request_Status.accepted)) {
+////                setGraphic(btn);
+////                setText(null);
+////            } else {
+////                setGraphic(null);
+////                setText(purchaseRequest.getStatus().toString());
+////            }
+//        }
+//    }
+//}
+//new TableCell<T, String>() {
+//
+//final Button btn = new Button("Buy");
+//
+//@Override
+//public void updateItem(String item, boolean empty) {
+//        super.updateItem(item, empty);
+//        if (empty) {
+//        setGraphic(null);
+//        setText(null);
+//        } else {
+//        btn.setOnAction(value);
+//        }
+//        }
+//        }

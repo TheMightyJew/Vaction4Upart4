@@ -475,12 +475,12 @@
                            <content>
                               <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="383.0" prefWidth="2500.0" tabClosingPolicy="UNAVAILABLE">
                                  <tabs>
-                                    <Tab text="My requests">
+                                    <Tab text="My switch requests">
                                        <content>
                                           <TableView fx:id="tableView_mySwitchRequests" prefHeight="200.0" prefWidth="200.0" />
                                        </content>
                                     </Tab>
-                                    <Tab text="Received requests">
+                                    <Tab text="Received switch requests">
                                        <content>
                                           <TableView fx:id="tableView_receivedSwitchRequests" prefHeight="200.0" prefWidth="200.0" />
                                        </content>

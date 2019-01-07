@@ -4,6 +4,7 @@ package Model;
 import Model.Objects.*;
 import Model.Requests.PurchaseARequest;
 import Model.Requests.PurchaseRequestData;
+import Model.Requests.TradeRequestData;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -61,6 +62,15 @@ public interface IModel {
     boolean sendRequest(PurchaseRequestData purchaseRequestData);
 
     /**
+     * This functions should put the tradeRequestData in the database with unique id
+     * need to apply: TradeRequestData.Request_Status=TradeRequestData.TradeRequestsfieldNameEnum.Request_Status//todo change
+     *
+     * @param tradeRequestData - tradeRequestData from a user that want to buy certain vacation
+     * @return if tradeRequestData application succeeded.
+     */
+    boolean sendTradeRequest(TradeRequestData tradeRequestData);
+
+    /**
      * @param username -
      * @return the requests that the given username's user sent to other users
      */
@@ -83,6 +93,8 @@ public interface IModel {
      * @param requestId
      */
     boolean rejectPurchaseRequest(int requestId);
+
+    VacationSell getMyVacations(String username);
 
     /**
      * save payment to database using payment.tostring function.
