@@ -209,6 +209,7 @@ public class Vacation4UDatabase {
     }
 
     public List<VacationSell> getMyVacations(String username) {
+        List<VacationSell> vacationSells = new ArrayList<>();
         List<String[]> userVacationDetails = vacationsTable.getVacationsByUsernameString(username);
         for (String[] userVacationDetail : userVacationDetails) {
             List<String[]> IDflightOfvacation = flightsToVacationsTable.getFlightsOfVacationsString(userVacationDetail[0]);//This is for create the Vacation object of the offered vacation
@@ -220,7 +221,8 @@ public class Vacation4UDatabase {
             }
             Vacation wantedVacation = new Vacation(userVacationDetail[1], LocalDate.parse(userVacationDetail[4]), LocalDate.parse(userVacationDetail[5]), Integer.parseInt(userVacationDetail[6]), Integer.parseInt(userVacationDetail[7]), userVacationDetail[8].equals("true"), userVacationDetail[2], userVacationDetail[3], (Integer.parseInt(userVacationDetail[12]) > 0), Integer.parseInt(userVacationDetail[12]), Vacation.Tickets_Type.valueOf(userVacationDetail[9]), FlightsForWantedVacation, Vacation.Flight_Type.valueOf(userVacationDetail[11]), Vacation.Vacation_Type.valueOf(userVacationDetail[10]), userVacationDetail[13].equals("true"), Integer.parseInt(userVacationDetail[14]));
             VacationSell wantedVacationSell = new VacationSell(Integer.parseInt(userVacationDetail[0]), wantedVacation, VacationSell.Vacation_Status.valueOf(userVacationDetail[15]));
-
+            vacationSells.add(wantedVacationSell);
         }
+        return vacationSells;
     }
 }

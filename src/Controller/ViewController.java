@@ -350,30 +350,15 @@ public class ViewController implements Initializable, Observer {
         });
     }
 
-    private static <T> Callback<TableColumn<T, String>, TableCell<T, String>> getCallback(EventHandler<ActionEvent> value) {
-        return param ->
-                new TableCell<T, String>() {
-
-                    final Button btn = new Button("Buy");
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            btn.setOnAction(value);
-                        }
-                    }
-                };
-    }
-
     private void refreshRequests() {
         tableView_myRequests.getItems().clear();
         tableView_myRequests.getItems().addAll(model.getMyPurchaseRequests(username));
         tableView_receivedRequests.getItems().clear();
         tableView_receivedRequests.getItems().addAll(model.getReceivedPurchaseRequests(username));
+        tableView_mySwitchRequests.getItems().clear();
+        tableView_mySwitchRequests.getItems().addAll(model.getMyTradeRequests(username));
+        tableView_receivedSwitchRequests.getItems().clear();
+        tableView_receivedSwitchRequests.getItems().addAll(model.getReceivedTradeRequests(username));
 
     }
 
@@ -852,7 +837,7 @@ public class ViewController implements Initializable, Observer {
 
 
 
-    private TableView<Flight> getRequestsTableView(TableView tableView, Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>... cellFactorys) {
+    private TableView<PurchaseARequest> getRequestsTableView(TableView tableView, Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>... cellFactorys) {
         tableView = (TableView<PurchaseARequest>) tableView;
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -904,13 +889,13 @@ public class ViewController implements Initializable, Observer {
         return tableView;
     }
 
-    private TableView<Flight> getTradeRequestsTableView(TableView tableView, Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>>... cellFactorys) {
+    private TableView<TradeARequest> getTradeRequestsTableView(TableView tableView, Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>>... cellFactorys) {
         tableView = (TableView<TradeARequest>) tableView;
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<TradeARequest, String> seeRequesterVacation = new TableColumn<>("Requester Vacation");
         TableColumn<TradeARequest, String> seeMyVacation = new TableColumn<>("My Vacation");
 
-        seeRequesterVacation.setCellFactory(param -> new TableCell<TradeARequest, String>() {
+        seeMyVacation.setCellFactory(param -> new TableCell<TradeARequest, String>() {
 
             final Button btn = new Button("see wanted vacation");
 
@@ -966,6 +951,8 @@ public class ViewController implements Initializable, Observer {
                 }
             }
         });
+
+        tableView.getColumns().addAll(seeRequesterVacation,seeMyVacation);
 
         for (Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellCallback : cellFactorys) {
             TableColumn<TradeARequest, String> column = new TableColumn<>();//Button
