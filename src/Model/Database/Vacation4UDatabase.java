@@ -18,7 +18,7 @@ import java.util.List;
 public class Vacation4UDatabase {
     private FlightsTable flightsTable;
     private FlightsToVacationsTable flightsToVacationsTable;
-//    private PaymentsTable paymentsTable;
+    //    private PaymentsTable paymentsTable;
     private PurchaseRequestsTable purchaseRequestsTable;
     private UsersTable usersTable;
     private VacationsTable vacationsTable;
@@ -92,6 +92,7 @@ public class Vacation4UDatabase {
     public boolean sendRequest(PurchaseRequestData purchaseRequestData) {
         return purchaseRequestsTable.sendRequest(purchaseRequestData);
     }
+
     public boolean sendTradeRequest(TradeRequestData tradeRequestData) {
         return tradeRequestsTable.sendRequest(tradeRequestData);
     }
@@ -150,7 +151,7 @@ public class Vacation4UDatabase {
                 }
                 Vacation wantedVacation = new Vacation(wantedVacationDetails[1], LocalDate.parse(wantedVacationDetails[4]), LocalDate.parse(wantedVacationDetails[5]), Integer.parseInt(wantedVacationDetails[6]), Integer.parseInt(wantedVacationDetails[7]), wantedVacationDetails[8].equals("true"), wantedVacationDetails[2], wantedVacationDetails[3], (Integer.parseInt(wantedVacationDetails[12]) > 0), Integer.parseInt(wantedVacationDetails[12]), Vacation.Tickets_Type.valueOf(wantedVacationDetails[9]), FlightsForWantedVacation, Vacation.Flight_Type.valueOf(wantedVacationDetails[11]), Vacation.Vacation_Type.valueOf(wantedVacationDetails[10]), wantedVacationDetails[13].equals("true"), Integer.parseInt(wantedVacationDetails[14]));
                 VacationSell wantedVacationSell = new VacationSell(Integer.parseInt(wantedVacationDetails[0]), wantedVacation, VacationSell.Vacation_Status.valueOf(wantedVacationDetails[15]));
-                TradeARequest tradeARequest = new TradeARequest(Integer.parseInt(request[0]), ARequest.Request_Status.valueOf(request[3]),wantedVacationSell,offeredVacationSell);
+                TradeARequest tradeARequest = new TradeARequest(Integer.parseInt(request[0]), ARequest.Request_Status.valueOf(request[3]), wantedVacationSell, offeredVacationSell);
                 ans.add(tradeARequest);
             }
         }
@@ -173,7 +174,9 @@ public class Vacation4UDatabase {
             }
             Vacation wantedVacation = new Vacation(userVacation[1], LocalDate.parse(userVacation[4]), LocalDate.parse(userVacation[5]), Integer.parseInt(userVacation[6]), Integer.parseInt(userVacation[7]), userVacation[8].equals("true"), userVacation[2], userVacation[3], (Integer.parseInt(userVacation[12]) > 0), Integer.parseInt(userVacation[12]), Vacation.Tickets_Type.valueOf(userVacation[9]), FlightsForWantedVacation, Vacation.Flight_Type.valueOf(userVacation[11]), Vacation.Vacation_Type.valueOf(userVacation[10]), userVacation[13].equals("true"), Integer.parseInt(userVacation[14]));
             VacationSell wantedVacationSell = new VacationSell(Integer.parseInt(userVacation[0]), wantedVacation, VacationSell.Vacation_Status.valueOf(userVacation[15]));
-            for (String[] request : requestByVacation) {//create the offered vacation Object
+            for (String[] request : requestByVacation) {
+                if(!request[3].equals(TradeARequest.Request_Status.pending.name()))//create the offered vacation Object\
+                    continue;
                 String offeredVacationID = request[1];
                 String[] offeredVacationDetails = vacationsTable.getVacationsString(offeredVacationID);
                 IDflightOfvacation = flightsToVacationsTable.getFlightsOfVacationsString(offeredVacationID);
@@ -185,7 +188,7 @@ public class Vacation4UDatabase {
                 }
                 Vacation offeredVacation = new Vacation(offeredVacationDetails[1], LocalDate.parse(offeredVacationDetails[4]), LocalDate.parse(offeredVacationDetails[5]), Integer.parseInt(offeredVacationDetails[6]), Integer.parseInt(offeredVacationDetails[7]), offeredVacationDetails[8].equals("true"), offeredVacationDetails[2], offeredVacationDetails[3], (Integer.parseInt(offeredVacationDetails[12]) > 0), Integer.parseInt(offeredVacationDetails[12]), Vacation.Tickets_Type.valueOf(offeredVacationDetails[9]), FlightsForOfferedVacation, Vacation.Flight_Type.valueOf(offeredVacationDetails[11]), Vacation.Vacation_Type.valueOf(offeredVacationDetails[10]), offeredVacationDetails[13].equals("true"), Integer.parseInt(offeredVacationDetails[14]));
                 VacationSell offeredVacationSell = new VacationSell(Integer.parseInt(offeredVacationDetails[0]), offeredVacation, VacationSell.Vacation_Status.valueOf(offeredVacationDetails[15]));
-                TradeARequest tradeARequest = new TradeARequest(Integer.parseInt(request[0]), ARequest.Request_Status.valueOf(request[3]),wantedVacationSell,offeredVacationSell);
+                TradeARequest tradeARequest = new TradeARequest(Integer.parseInt(request[0]), ARequest.Request_Status.valueOf(request[3]), wantedVacationSell, offeredVacationSell);
                 ans.add(tradeARequest);
             }
         }
@@ -193,7 +196,26 @@ public class Vacation4UDatabase {
     }
 
     public boolean acceptPurchaseRequest(int requestId) {
-        return purchaseRequestsTable.acceptRequest(requestId);
+        boolean ans = purchaseRequestsTable.acceptRequest(requestId);
+        if (!ans)
+            return false;
+        String[] requestDetails = purchaseRequestsTable.getRequestDetail(requestId);
+        String vacationID = requestDetails[2];
+        String[] vacationValues = vacationsTable.getVacationsString(vacationID);
+        vacationValues[15] = VacationSell.Vacation_Status.sold.name();
+        vacationsTable.updateVacation(vacationID, vacationValues);
+        List<String[]> toReject = purchaseRequestsTable.getRequestForVacations(vacationID);
+        for (String[] tr : toReject) {
+            int requestNum = Integer.parseInt(tr[0]);
+            if (requestNum != requestId)
+                ans = ans && purchaseRequestsTable.rejectRequest(requestNum);
+        }
+        toReject = tradeRequestsTable.getRequestByWantedVacationID(vacationID);
+        for (String[] tr : toReject) {
+            int requestNum = Integer.parseInt(tr[0]);
+            ans = ans && tradeRequestsTable.rejectRequest(requestNum);
+        }
+        return ans;
     }
 
     public boolean rejectPurchaseRequest(int requestId) {
@@ -201,7 +223,30 @@ public class Vacation4UDatabase {
     }
 
     public boolean acceptTradeRequest(int requestId) {
-        return tradeRequestsTable.acceptRequest(requestId);
+        boolean ans = tradeRequestsTable.acceptRequest(requestId);
+        if (!ans)
+            return false;
+        String[] vacations = tradeRequestsTable.getVacationsIDs(requestId);
+        String[] offeredVacation = vacationsTable.getVacationsString(vacations[0]);
+        offeredVacation[15] = VacationSell.Vacation_Status.sold.name();
+        String[] wantedVacation = vacationsTable.getVacationsString(vacations[1]);
+        wantedVacation[15] = VacationSell.Vacation_Status.sold.name();
+        ans = vacationsTable.updateVacation(vacations[0], offeredVacation);
+        ans = ans && vacationsTable.updateVacation(vacations[1], wantedVacation);
+
+        List<String[]> toReject = tradeRequestsTable.getRequestByWantedVacationID(vacations[1]);
+        for (String[] tr : toReject) {
+            int requestNum = Integer.parseInt(tr[0]);
+            if (requestId != requestNum)
+                ans = ans && tradeRequestsTable.rejectRequest(requestNum);
+        }
+
+        toReject = purchaseRequestsTable.getRequestForVacations(vacations[1]);
+        for (String[] tr : toReject) {
+            int requestNum = Integer.parseInt(tr[0]);
+                ans = ans && purchaseRequestsTable.rejectRequest(requestNum);
+        }
+        return ans;
     }
 
     public boolean rejectTradeRequest(int requestId) {

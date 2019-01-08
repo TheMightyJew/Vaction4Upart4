@@ -47,7 +47,7 @@ public class PurchaseRequestsTable extends AVacationdatabaseTable {
     }
 
 
-    public List<String[]> getMyRequestsSting(String username){
+    public List<String[]> getMyRequestsSting(String username) {
         List<String[]> results = selectQuery(tableNameEnum.PurchaseRequests_Table.name(), PurchaseRequestsfieldNameEnum.Requester_Username + "='" + username + "'");
         return results;
     }
@@ -93,14 +93,33 @@ public class PurchaseRequestsTable extends AVacationdatabaseTable {
         }
     }
 
+    public String[] getRequestDetail(int requestID) {
+        String[] values = selectQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestID + "'").get(0);
+        return values;
+    }
+
+
+    public List<String[]> getRequestForVacations(String vacationID)
+    {
+        List<String[]> toReject = selectQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsfieldNameEnum.Vacation_id + "='" + vacationID + "'");
+        return toReject;
+    }
+
     public boolean rejectRequest(int requestId) {
         String[] values = selectQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'").get(0);
         values[3] = PurchaseARequest.Request_Status.rejected.toString();
         try {
-            updateQuery(tableNameEnum.PurchaseRequests_Table.toString(),PurchaseRequestsfieldNameEnum.class, values, PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'");
+            updateQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsfieldNameEnum.class, values, PurchaseRequestsfieldNameEnum.PurchaseRequest_id + "='" + requestId + "'");
             return true;
         } catch (SQLException e) {
             return false;
         }
+    }
+
+
+    public String getVacationID(int requestID) {
+        String[] values = selectQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsfieldNameEnum.Vacation_id + "='" + requestID + "'").get(0);
+        String ID = values[2];
+        return ID;
     }
 }

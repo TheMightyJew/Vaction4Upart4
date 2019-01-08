@@ -295,15 +295,26 @@ public class ViewController implements Initializable, Observer {
     }
 
     private void refreshRequests() {
-        tableView_myRequests.getItems().clear();
-        tableView_myRequests.getItems().addAll(model.getMyPurchaseRequests(username));
-        tableView_receivedRequests.getItems().clear();
-        tableView_receivedRequests.getItems().addAll(model.getReceivedPurchaseRequests(username));
-        tableView_mySwitchRequests.getItems().clear();
-        tableView_mySwitchRequests.getItems().addAll(model.getMyTradeRequests(username));
-        tableView_receivedSwitchRequests.getItems().clear();
+        if (tableView_myRequests != null) {
+            if (tableView_myRequests.getItems() != null)
+                tableView_myRequests.getItems().clear();
+            tableView_myRequests.getItems().addAll(model.getMyPurchaseRequests(username));
+        }
+        if (tableView_receivedRequests != null) {
+            if (tableView_receivedRequests.getItems() != null)
+                tableView_receivedRequests.getItems().clear();
+            tableView_receivedRequests.getItems().addAll(model.getReceivedPurchaseRequests(username));
+        }
+        if (tableView_mySwitchRequests != null) {
+            if (tableView_mySwitchRequests.getItems() != null)
+                tableView_mySwitchRequests.getItems().clear();
+            tableView_mySwitchRequests.getItems().addAll(model.getMyTradeRequests(username));
+        }
+        if (tableView_receivedSwitchRequests != null) {
+            if (tableView_receivedSwitchRequests.getItems() != null)
+                tableView_receivedSwitchRequests.getItems().clear();
+        }
         tableView_receivedSwitchRequests.getItems().addAll(model.getReceivedTradeRequests(username));
-
     }
 
     private void tabSearchInit() {
@@ -761,24 +772,22 @@ public class ViewController implements Initializable, Observer {
         clearRec(gridPane_searchFilters);
     }
 
-    private void clearRec(Pane pane){
-        for(Node node:pane.getChildren())
-            if(node instanceof Pane)
-                clearRec((Pane)node);
-            else if(node instanceof TextField){
-                ((TextField) node).clear();;
-            }
-            else if(node instanceof CheckBox){
-                ((CheckBox) node).setSelected(false);;
-            }
-            else if(node instanceof ComboBox){
-                ((ComboBox) node).getItems().clear();
-            }
-            else if(node instanceof DatePicker){
+    private void clearRec(Pane pane) {
+        for (Node node : pane.getChildren())
+            if (node instanceof Pane)
+                clearRec((Pane) node);
+            else if (node instanceof TextField) {
+                ((TextField) node).clear();
+                ;
+            } else if (node instanceof CheckBox) {
+                ((CheckBox) node).setSelected(false);
+                ;
+            } else if (node instanceof ComboBox) {
+                ((ComboBox) node).setValue(null);
+            } else if (node instanceof DatePicker) {
                 ((DatePicker) node).setValue(null);
             }
     }
-
 
 
     private TableView<PurchaseARequest> getRequestsTableView(TableView tableView, Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>... cellFactorys) {
@@ -896,7 +905,7 @@ public class ViewController implements Initializable, Observer {
             }
         });
 
-        tableView.getColumns().addAll(seeRequesterVacation,seeMyVacation);
+        tableView.getColumns().addAll(seeRequesterVacation, seeMyVacation);
 
         for (Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellCallback : cellFactorys) {
             TableColumn<TradeARequest, String> column = new TableColumn<>();//Button

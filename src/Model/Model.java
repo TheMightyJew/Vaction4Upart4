@@ -567,7 +567,9 @@ public class Model implements IModel {
 //        return false;
 //    }
 
-
+    public boolean acceptMoneyReceived(int purchaseRequestId){
+        return vacation4UDatabase.acceptPurchaseRequest(purchaseRequestId);
+    }
     public boolean UsersTable_checkPassword(String Username_val, String Password_val) {
         return vacation4UDatabase.UsersTable_checkPassword(Username_val, Password_val);
     }

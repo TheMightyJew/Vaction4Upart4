@@ -13,13 +13,13 @@ public class VacationsTable extends AVacationdatabaseTable {
 
     public String[] getVacationsString(String vacationId) {
         List<String[]> vactionbyid = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.Vacation_id + "='" + vacationId + "'");//get information to create vacation
-        if(vactionbyid.size()!=1)
+        if (vactionbyid.size() != 1)
             return null;
         String[] vacation = vactionbyid.get(0);
         return vacation;
     }
 
-    public List<String[]> getVacationsByUsernameString(String username){
+    public List<String[]> getVacationsByUsernameString(String username) {
         List<String[]> vaction_of_user = selectQuery(AVacationdatabaseTable.tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.Publisher_Username + "='" + username + "'");//get information to create vacation
         return vaction_of_user;
     }
@@ -78,9 +78,9 @@ public class VacationsTable extends AVacationdatabaseTable {
         int baggage = vacation.isBaggage_Included() ? 1 : 0;
         if (baggage > 0)
             baggage = vacation.getBaggageLimit();
-        boolean ans=insertQuery(tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.class, new String[]{null, vacation.getSeller_username(), vacation.getSourceCountry(), vacation.getDestinationCountry(), vacation.getFromDate().toString(), vacation.getToDate().toString(), String.valueOf(vacation.getPrice_Per_Ticket()),
+        boolean ans = insertQuery(tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.class, new String[]{null, vacation.getSeller_username(), vacation.getSourceCountry(), vacation.getDestinationCountry(), vacation.getFromDate().toString(), vacation.getToDate().toString(), String.valueOf(vacation.getPrice_Per_Ticket()),
                 String.valueOf(vacation.getTickets_Quantity()), String.valueOf(vacation.isCanBuyLess()), vacation.getTicketsType().name(), vacation.getVacation_type().name(), vacation.getFlight_Type().name(), String.valueOf(baggage), String.valueOf(vacation.isHospitality_Included()), String.valueOf(vacation.getHospitality_Rank()), VacationSell.Vacation_Status.available.name()});
-        if(ans==false)
+        if (ans == false)
             return ans;
         String vacationID = selectQuery(tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.Publisher_Username.name() + "='" + vacation.getSeller_username() + "' AND " + VacationsfieldNameEnum.Source_Country.name() + "='" + vacation.getSourceCountry() + "' AND " + VacationsfieldNameEnum.Destination_Country.name() + "='" + vacation.getDestinationCountry()
                 + "' AND " + VacationsfieldNameEnum.From_Date + "='" + vacation.getFromDate().toString() + "' AND " + VacationsfieldNameEnum.To_Date + "='" + vacation.getToDate().toString() + "' AND " + VacationsfieldNameEnum.Price_Per_ticket.name() + "='" + vacation.getPrice_Per_Ticket() + "' AND " + VacationsfieldNameEnum.Num_Of_Passengers.name() + "='" + vacation.getTickets_Quantity() + "' AND " + VacationsfieldNameEnum.Can_Buy_less_Tickets.name() + "='" + vacation.isCanBuyLess() + "' AND "
@@ -177,5 +177,13 @@ public class VacationsTable extends AVacationdatabaseTable {
         return ans;
     }
 
+    public boolean updateVacation(String vacationID, String[] newValue) {
+        try {
+            updateQuery(tableNameEnum.Vacations_Table.name(), VacationsfieldNameEnum.class, newValue, VacationsfieldNameEnum.Vacation_id.name() + "='" + vacationID + "'");
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 
 }

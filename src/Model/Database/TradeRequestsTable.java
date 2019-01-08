@@ -39,6 +39,10 @@ public class TradeRequestsTable extends AVacationdatabaseTable {
     }
 
     public boolean sendRequest(TradeRequestData request) {
+        List<String[]> valuesExists = selectQuery(tableNameEnum.TradeRequests_Table.name(), TradeRequestsfieldNameEnum.Offered_Vacation_id.name() + "='" + request.getOfferedVacation() + "' AND " + TradeRequestsfieldNameEnum.Wanted_Vacation_id.name() + "='" + request.getWantedVacation() + "'");
+        List<String[]> valuesExistsOpposite = selectQuery(tableNameEnum.TradeRequests_Table.name(), TradeRequestsfieldNameEnum.Offered_Vacation_id.name() + "='" + request.getWantedVacation() + "' AND " + TradeRequestsfieldNameEnum.Wanted_Vacation_id.name() + "='" + request.getOfferedVacation() + "'");
+        if(valuesExists.size()>0 || valuesExistsOpposite.size()>0)
+            return false;
         try {
             String[] values = {null, "" + request.getOfferedVacation(), "" + request.getWantedVacation(), TradeARequest.Request_Status.pending.name()};
             insertQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsTable.TradeRequestsfieldNameEnum.class, values);
@@ -130,10 +134,18 @@ public class TradeRequestsTable extends AVacationdatabaseTable {
         values[3] = TradeARequest.Request_Status.accepted.toString();
         try {
             updateQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsfieldNameEnum.class, values, TradeRequestsfieldNameEnum.TradeRequest_id + "='" + requestId + "'");
+            // TODO: 08/01/2019 decline all other requests
             return true;
         } catch (SQLException e) {
             return false;
         }
+    }
+
+
+    public String[] getVacationsIDs(int requestID) {
+        String[] values = selectQuery(tableNameEnum.TradeRequests_Table.toString(), TradeRequestsfieldNameEnum.TradeRequest_id + "='" + requestID + "'").get(0);
+        String[] IDs = new String[]{values[1], values[2]};
+        return IDs;
     }
 
     public boolean rejectRequest(int requestId) {
