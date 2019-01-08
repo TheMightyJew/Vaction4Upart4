@@ -156,64 +156,8 @@ public class ViewController implements Initializable, Observer {
     }
 
     private void tabRequestsInit() {
-        Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellFactory1
-                = //
-                new Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>>() {
-                    @Override
-                    public TableCell<PurchaseARequest, String> call(final TableColumn<PurchaseARequest, String> param) {
-                        final TableCell<PurchaseARequest, String> cell = new TableCell<PurchaseARequest, String>() {
 
-                            final Button btn = new Button("Buy");
-
-                            @Override
-                            public void updateItem(String item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (empty) {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else {
-                                    btn.setOnAction(event -> {
-                                        Stage stage = new Stage();
-                                        stage.setAlwaysOnTop(false);
-                                        stage.setResizable(false);
-                                        stage.setTitle("Payment Window");
-
-                                        Parent root = null;
-                                        FXMLLoader fxmlLoader = null;
-                                        try {
-                                            fxmlLoader = new FXMLLoader(getClass().getResource("../View/PaymentWindow.fxml"));
-                                            root = fxmlLoader.load();
-                                            PaymentWindowController controller = fxmlLoader.getController();
-                                            controller.setData(model, getTableView().getItems().get(getIndex()).getId());
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-//                                            showAlert("Exception!");
-                                        }
-                                        Scene scene = new Scene(root);
-                                        stage.setScene(scene);
-//                                        AView view = fxmlLoader.getController();
-//                                        view.setViewModel(viewModel);
-//                                        viewModel.addObserver(view);
-//                                        stage.initModality(Modality.APPLICATION_MODAL);
-                                        stage.setOnCloseRequest(event1 -> refreshRequests());
-                                        stage.show();
-
-                                    });
-                                    PurchaseARequest purchaseRequest = getTableView().getItems().get(getIndex());
-                                    if (purchaseRequest.getStatus().equals(PurchaseARequest.Request_Status.accepted)) {
-                                        setGraphic(btn);
-                                        setText(null);
-                                    } else {
-                                        setGraphic(null);
-                                        setText(purchaseRequest.getStatus().toString());
-                                    }
-                                }
-                            }
-                        };
-                        return cell;
-                    }
-                };
-        tableView_myRequests = getRequestsTableView(tableView_myRequests, cellFactory1);
+        tableView_myRequests = getRequestsTableView(tableView_myRequests);
 
         Callback<TableColumn<PurchaseARequest, String>, TableCell<PurchaseARequest, String>> cellFactory2
                 = //
@@ -966,7 +910,7 @@ public class ViewController implements Initializable, Observer {
     private TableView<Flight> getFlightsTableView() {
         TableView<Flight> flightTableView = new TableView<>();
         flightTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        setTableViewHeight(flightTableView);
+//        setTableViewHeight(flightTableView);
 
         TableColumn<Flight, String> flightCompany = new TableColumn<>("Flight company");
         TableColumn<Flight, String> sourceAirPort = new TableColumn<>("Source airport");
@@ -989,7 +933,7 @@ public class ViewController implements Initializable, Observer {
     private TableView<VacationSell> getVacationsTable() {
         TableView<VacationSell> vacations = new TableView<>();
         vacations.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        setTableViewHeight(vacations);
+//        setTableViewHeight(vacations);
 
         TableColumn<VacationSell, String> seller_username = new TableColumn<>("Seller username");
         TableColumn<VacationSell, String> sourceCountry = new TableColumn<>("Source country");
