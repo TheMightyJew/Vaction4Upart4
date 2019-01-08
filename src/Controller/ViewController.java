@@ -277,7 +277,7 @@ public class ViewController implements Initializable, Observer {
                 };
         tableView_receivedRequests = getRequestsTableView(tableView_receivedRequests, cellFactory2, cellFactory3);
 
-
+        tableView_mySwitchRequests = new TableView();
         tableView_mySwitchRequests = getTradeRequestsTableView(tableView_mySwitchRequests);
 
         Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellFactory5
@@ -959,7 +959,7 @@ public class ViewController implements Initializable, Observer {
             column.setCellFactory(cellCallback);
             tableView.getColumns().add(column);
         }
-        return null;
+        return tableView;
     }
 
 
