@@ -1102,7 +1102,6 @@ public class ViewController implements Initializable, Observer {
                                     setGraphic(null);
                                     setText(null);
                                 } else {
-
                                     btn.setOnAction(event -> {
                                         if (loggedIn) {
                                             VacationSell vacationSell = getTableView().getItems().get(getIndex());
@@ -1181,7 +1180,7 @@ public class ViewController implements Initializable, Observer {
                     }
                 };
 
-        request_buttons.setCellFactory(cellFactory3);
+        switch_request_buttons.setCellFactory(cellFactory3);
 
 
         vacations.getColumns().addAll(request_buttons, switch_request_buttons);
