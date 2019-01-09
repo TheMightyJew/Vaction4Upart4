@@ -14,6 +14,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -168,6 +169,10 @@ public class ViewController implements Initializable, Observer {
 
                             final Button btn = new Button("Accept request");
 
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
+
                             @Override
                             public void updateItem(String item, boolean empty) {
                                 super.updateItem(item, empty);
@@ -198,6 +203,10 @@ public class ViewController implements Initializable, Observer {
 
                             final Button btn = new Button("reject request");
 
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
+
                             @Override
                             public void updateItem(String item, boolean empty) {
                                 super.updateItem(item, empty);
@@ -221,7 +230,6 @@ public class ViewController implements Initializable, Observer {
                 };
         tableView_receivedRequests = getRequestsTableView(tableView_receivedRequests, cellFactory2, cellFactory3);
 
-        tableView_mySwitchRequests = new TableView();
         tableView_mySwitchRequests = getTradeRequestsTableView(tableView_mySwitchRequests);
 
         Callback<TableColumn<TradeARequest, String>, TableCell<TradeARequest, String>> cellFactory5
@@ -232,6 +240,10 @@ public class ViewController implements Initializable, Observer {
                         final TableCell<TradeARequest, String> cell = new TableCell<TradeARequest, String>() {
 
                             final Button btn = new Button("Accept request");
+
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
 
                             @Override
                             public void updateItem(String item, boolean empty) {
@@ -262,6 +274,10 @@ public class ViewController implements Initializable, Observer {
                         final TableCell<TradeARequest, String> cell = new TableCell<TradeARequest, String>() {
 
                             final Button btn = new Button("reject request");
+
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
 
                             @Override
                             public void updateItem(String item, boolean empty) {
@@ -296,8 +312,7 @@ public class ViewController implements Initializable, Observer {
 
     private void refreshRequests() {
         if (tableView_myRequests != null) {
-            if (tableView_myRequests.getItems() != null)
-                tableView_myRequests.getItems().clear();
+            if (tableView_myRequests.getItems() != null) tableView_myRequests.getItems().clear();
             tableView_myRequests.getItems().addAll(model.getMyPurchaseRequests(username));
         }
         if (tableView_receivedRequests != null) {
@@ -312,9 +327,11 @@ public class ViewController implements Initializable, Observer {
         }
         if (tableView_receivedSwitchRequests != null) {
             if (tableView_receivedSwitchRequests.getItems() != null)
-                tableView_receivedSwitchRequests.getItems().clear();
+            tableView_receivedSwitchRequests.getItems().clear();
         }
         tableView_receivedSwitchRequests.getItems().addAll(model.getReceivedTradeRequests(username));
+
+
     }
 
     private void tabSearchInit() {
@@ -846,11 +863,16 @@ public class ViewController implements Initializable, Observer {
         tableView = (TableView<TradeARequest>) tableView;
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<TradeARequest, String> seeRequesterVacation = new TableColumn<>("Requester Vacation");
+        seeRequesterVacation.setPrefWidth(100);
         TableColumn<TradeARequest, String> seeMyVacation = new TableColumn<>("My Vacation");
-
+        seeMyVacation.setPrefWidth(100);
         seeMyVacation.setCellFactory(param -> new TableCell<TradeARequest, String>() {
 
             final Button btn = new Button("see wanted vacation");
+
+            {
+                btn.setAlignment(Pos.CENTER);
+            }
 
             @Override
             public void updateItem(String item, boolean empty) {
@@ -879,6 +901,10 @@ public class ViewController implements Initializable, Observer {
         seeRequesterVacation.setCellFactory(param -> new TableCell<TradeARequest, String>() {
 
             final Button btn = new Button("see offered vacation");
+
+            {
+                btn.setAlignment(Pos.CENTER);
+            }
 
             @Override
             public void updateItem(String item, boolean empty) {
@@ -987,6 +1013,10 @@ public class ViewController implements Initializable, Observer {
 
                             final Button btn = new Button("see more");
 
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
+
                             @Override
                             public void updateItem(String item, boolean empty) {
                                 super.updateItem(item, empty);
@@ -1048,6 +1078,10 @@ public class ViewController implements Initializable, Observer {
 
                             final Button btn = new Button("request");
 
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
+
                             @Override
                             public void updateItem(String item, boolean empty) {
                                 super.updateItem(item, empty);
@@ -1088,6 +1122,10 @@ public class ViewController implements Initializable, Observer {
                         final TableCell<VacationSell, String> cell = new TableCell<VacationSell, String>() {
 
                             final Button btn = new Button("request switch");
+
+                            {
+                                btn.setAlignment(Pos.CENTER);
+                            }
 
                             @Override
                             public void updateItem(String item, boolean empty) {
@@ -1134,7 +1172,7 @@ public class ViewController implements Initializable, Observer {
                 };
 
         switch_request_buttons.setCellFactory(cellFactory3);
-
+        switch_request_buttons.setPrefWidth(100);
 
         vacations.getColumns().addAll(request_buttons, switch_request_buttons);
 
@@ -1179,7 +1217,11 @@ public class ViewController implements Initializable, Observer {
         switchRequests.setCellFactory(param ->
                 new TableCell<VacationSell, String>() {
 
-                    final Button btn = new Button("see more");
+                    final Button btn = new Button("send request");
+
+                    {
+                        btn.setAlignment(Pos.CENTER);
+                    }
 
                     @Override
                     public void updateItem(String item, boolean empty) {
