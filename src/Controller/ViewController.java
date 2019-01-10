@@ -154,6 +154,8 @@ public class ViewController implements Initializable, Observer {
         //searchTab
         tabSearchInit();
         tabRequestsInit();
+        textField_baggage.setText("0");
+        textField_hospitality.setText("0");
     }
 
     private void tabRequestsInit() {
@@ -328,8 +330,8 @@ public class ViewController implements Initializable, Observer {
         if (tableView_receivedSwitchRequests != null) {
             if (tableView_receivedSwitchRequests.getItems() != null)
             tableView_receivedSwitchRequests.getItems().clear();
+            tableView_receivedSwitchRequests.getItems().addAll(model.getReceivedTradeRequests(username));
         }
-        tableView_receivedSwitchRequests.getItems().addAll(model.getReceivedTradeRequests(username));
 
 
     }
@@ -1175,6 +1177,16 @@ public class ViewController implements Initializable, Observer {
         switch_request_buttons.setPrefWidth(100);
 
         vacations.getColumns().addAll(request_buttons, switch_request_buttons);
+
+        if (checkBox_baggage.isSelected() && textField_baggage.getText().equals(""))
+        {
+            textField_baggage.setText("0");
+        }
+        if (checkBox_hospitality.isSelected() && textField_hospitality.getText().equals(""))
+        {
+            textField_hospitality.setText("0");
+        }
+
 
         List<VacationSell> vacationSells = model.getVacations(username,
                 textField_flightCompany.getText().equals("") ? null : textField_flightCompany.getText(),
