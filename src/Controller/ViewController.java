@@ -1100,7 +1100,7 @@ public class ViewController implements Initializable, Observer {
                                                 if (model.sendRequest(new PurchaseRequestData(username, vacationSell.getId())))
                                                     Massage.infoMassage("sent request");
                                                 else
-                                                    Massage.errorMassage("set failed");
+                                                    Massage.errorMassage("You already requested that request?\\nif yes please stop you cant request twice the same thing, and if not its just an error.");
                                             }
                                         } else
                                             Massage.errorMassage("You should login to request and buy vacation");
@@ -1247,7 +1247,7 @@ public class ViewController implements Initializable, Observer {
                                 if (model.sendTradeRequest(new TradeRequestData(requestedVacationId, vacationSell.getId())))
                                     Massage.infoMassage("sent request");
                                 else
-                                    Massage.errorMassage("set failed");
+                                    Massage.errorMassage("You already requested that request?\\nif yes please stop you cant request twice the same thing, and if not its just an error.");
                             });
                             setGraphic(btn);
                             setText(null);
