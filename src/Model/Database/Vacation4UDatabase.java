@@ -251,7 +251,7 @@ public class Vacation4UDatabase {
         }
 
         toReject = purchaseRequestsTable.getRequestForVacations(vacations[1]);
-        toReject.addAll(purchaseRequestsTable.getMyRequestsSting(vacations[0]));
+        toReject.addAll(purchaseRequestsTable.getRequestForVacations(vacations[0]));
         for (String[] tr : toReject) {
             int requestNum = Integer.parseInt(tr[0]);
                 ans = ans && purchaseRequestsTable.rejectRequest(requestNum);
