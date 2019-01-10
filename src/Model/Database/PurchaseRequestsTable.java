@@ -37,6 +37,9 @@ public class PurchaseRequestsTable extends AVacationdatabaseTable {
     }
 
     public boolean sendRequest(PurchaseRequestData purchaseRequestData) {
+        List<String[]> valuesExists = selectQuery(tableNameEnum.PurchaseRequests_Table.name(), PurchaseRequestsfieldNameEnum.Vacation_id.name() + "='" + purchaseRequestData.getVacationId() + "' AND "+ PurchaseRequestsfieldNameEnum.Requester_Username.name()+"='"+purchaseRequestData.getUsername()+"'");
+        if(valuesExists.size()>0)
+            return false;
         try {
             String[] values = {null, purchaseRequestData.getUsername(), "" + purchaseRequestData.getVacationId(), PurchaseARequest.Request_Status.pending.name()};
             insertQuery(tableNameEnum.PurchaseRequests_Table.toString(), PurchaseRequestsfieldNameEnum.class, values);
