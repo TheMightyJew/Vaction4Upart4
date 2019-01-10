@@ -211,6 +211,7 @@ public class Vacation4UDatabase {
                 ans = ans && purchaseRequestsTable.rejectRequest(requestNum);
         }
         toReject = tradeRequestsTable.getRequestByWantedVacationID(vacationID);
+        toReject.addAll(tradeRequestsTable.getRequestByOfferdVacationID(vacationID));
         for (String[] tr : toReject) {
             int requestNum = Integer.parseInt(tr[0]);
             ans = ans && tradeRequestsTable.rejectRequest(requestNum);
@@ -235,6 +236,14 @@ public class Vacation4UDatabase {
         ans = ans && vacationsTable.updateVacation(vacations[1], wantedVacation);
 
         List<String[]> toReject = tradeRequestsTable.getRequestByWantedVacationID(vacations[1]);
+        toReject.addAll(tradeRequestsTable.getRequestByOfferdVacationID(vacations[1]));
+        for (String[] tr : toReject) {
+            int requestNum = Integer.parseInt(tr[0]);
+            if (requestId != requestNum)
+                ans = ans && tradeRequestsTable.rejectRequest(requestNum);
+        }
+        toReject = tradeRequestsTable.getRequestByOfferdVacationID(vacations[0]);
+        toReject.addAll(tradeRequestsTable.getRequestByWantedVacationID(vacations[0]));
         for (String[] tr : toReject) {
             int requestNum = Integer.parseInt(tr[0]);
             if (requestId != requestNum)
@@ -242,6 +251,7 @@ public class Vacation4UDatabase {
         }
 
         toReject = purchaseRequestsTable.getRequestForVacations(vacations[1]);
+        toReject.addAll(purchaseRequestsTable.getMyRequestsSting(vacations[0]));
         for (String[] tr : toReject) {
             int requestNum = Integer.parseInt(tr[0]);
                 ans = ans && purchaseRequestsTable.rejectRequest(requestNum);
